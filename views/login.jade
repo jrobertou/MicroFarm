@@ -1,0 +1,17 @@
+form( method="post", action="/login" )#login-form.well.row-fluid
+  h1 Login
+  p.subheading Please Login To Your Account
+  hr
+  fieldset
+  label Username 
+  input(type="text", name="login-user").span12.required
+  label Password
+  input(type="password", name="login-pass").span12.required
+  hr
+  button(type="submit")#btn-login.btn.btn-block.btn-primary
+    i.icon-lock.icon-white
+    |   Sign in
+
+  //input(type="checkbox", checked='checked').span2
+  //label#remember-me.checkbox Remember Me
+  div.clear-fix
