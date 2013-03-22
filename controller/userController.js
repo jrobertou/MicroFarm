@@ -10,6 +10,11 @@ exports.addUser = function(email, username, pass, repass, callback)
 			pass: pass
 		}, callback);
 	}else {
-		callback('passwds-no-match');
+		callback.fct(callback.context, false, 'passwdsNoMatch');
 	}
+}
+
+exports.logUser = function(username, pass, callback)
+{
+	userDb.findUser(username, pass, callback);		
 }

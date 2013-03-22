@@ -2,6 +2,8 @@ form( method="post", action="/signup" )#signup-form.well.row-fluid
 	h1 Sign up
 	p.subheading Create your account
 	hr
+	if signupFeedback
+	p= signupFeedback
 	fieldset
 	label Email 
 	input(type="text", name="email").span12.required

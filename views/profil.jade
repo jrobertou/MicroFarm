@@ -4,8 +4,10 @@ block content
 	div.container-fluid
 		div.row-fluid
 			div.span4.offset1
-				include login
-			div.span4.offset2
-				include signup
+				if username
+				p= username
+			div.span4.offset1
+				if email
+				p= email
 			
 //script(src='/js/helpers/ajax-send-form.js')
