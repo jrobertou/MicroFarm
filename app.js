@@ -51,7 +51,7 @@ app.get('/', function(req, res){
 	}else
 	{
 		//autoLogin();
-		render.index(req, res, null, null);
+		res.render('index', {title: 'µFarm',signupFeedback: null,loginFeedback: null});
 	}
 });
 
@@ -84,20 +84,20 @@ app.post('/signup', function(req, res) {
       pass = req.body.pass,
       repass = req.body.repass;
 
-  userController.addUser(email, username, pass, repass, function(valid, options){
-      options.signupFeedback = 'Une erreur est survenue';
+  userController.addUser(email, username, pass, repass, function(valid, obj){
+      obj.signupFeedback = 'Une erreur est survenue';
       if(valid){
-        options.signupFeedback = validMessage['addUsername'];
+        obj.signupFeedback = validMessage['addUsername'];
       }else{
-        if(options.id){
-          options.signupFeedback = errorMessage[options.id];
+        if(obj.id){
+          obj.signupFeedback = errorMessage[obj.id];
         }else{
-          options.signupFeedback = errorMessage[options.error.id];
+          obj.signupFeedback = errorMessage[obj.error.id];
         }
       }
-      options.title = 'µFarm';
+      obj.title = 'µFarm';
 
-      context.render('index', options);
+      res.render('index', options);
     }
   );
 });

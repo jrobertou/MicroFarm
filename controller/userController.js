@@ -2,7 +2,6 @@ var userDb = require('../server/userDb.js');
 
 exports.addUser = function(email, username, pass, repass, callback)
 {
-	console.log('les pass sont: '+pass+'  --  '+repass);
 	if(pass === repass) {
 		userDb.addUser({
 			email: email,
@@ -16,5 +15,11 @@ exports.addUser = function(email, username, pass, repass, callback)
 
 exports.logUser = function(username, pass, callback)
 {
-	userDb.findUser(username, pass, callback);		
+	var obj = userDb.findUser(username, pass);
+
+	if(typeof obj === 'object'){
+		callback(true, obj);
+	}else{
+		callback(false, {id: obj});
+	}
 }
