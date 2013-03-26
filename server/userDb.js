@@ -57,17 +57,17 @@ exports.addUser = function(user, callback)
 	}
 }
 
-exports.findUser = function(username, pass)
+exports.findUser = function(user, callback)
 {
-	users.findOne({username:username}, function(error, obj) {
+	users.findOne({username:user.username}, function(error, obj) {
 		
 			if(obj){
-				if(!(obj.pass == pass && obj.username == username)){
-					obj = 'wrongPass';
+				if(!(obj.pass == user.pass && obj.username == user.username)){
+					callback(true, {id: 'wrongPass'});
 				}
 			}else{
-				obj = 'usernameNoTaken';
+				callback(true, {id: 'usernameNoTaken'});
 			}
-			return obj;
+			callback(false, {id: obj});
 	});
 }

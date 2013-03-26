@@ -15,11 +15,5 @@ exports.addUser = function(email, username, pass, repass, callback)
 
 exports.logUser = function(username, pass, callback)
 {
-	var obj = userDb.findUser(username, pass);
-
-	if(typeof obj === 'object'){
-		callback(true, obj);
-	}else{
-		callback(false, {id: obj});
-	}
+	userDb.findUser({username: username, pass: pass}, callback);
 }
