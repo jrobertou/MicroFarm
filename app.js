@@ -5,7 +5,6 @@
 
 var express = require('express'),
     userController = require('./controller/userController.js'),
-    render = require('./render/'),
     http = require('http'),
     path = require('path');
 
@@ -44,15 +43,36 @@ var validMessage = {
 };
 
 app.get('/', function(req, res){
-	var currentuser = null;
 
-	if(req.session && req.session.user){
-		res.redirect('/profil');
-	}else
-	{
-		//autoLogin();
-		render.index(req, res, null, null);
-	}
+  if(req.session && req.session.user){
+    res.redirect('/profil');
+  }else
+  {
+    userController.autoLogin(req.cookies);
+    res.render('index', {title: 'µFarm'});
+  }
+});
+
+app.get('/login', function(req, res){
+
+  if(req.session && req.session.user){
+    res.redirect('/profil');
+  }else
+  {
+    userController.autoLogin(req.cookies)
+    res.render('login', {title: 'µFarm', feedback: null});
+  }
+});
+
+app.get('/signup', function(req, res){
+
+  if(req.session && req.session.user){
+    res.redirect('/profil');
+  }else
+  {
+    userController.autoLogin(req.cookies)
+    res.render('signup', {title: 'µFarm', feedback: null});
+  }
 });
 
 
@@ -84,23 +104,22 @@ app.post('/signup', function(req, res) {
       pass = req.body.pass,
       repass = req.body.repass;
 
-  userController.addUser(email, username, pass, repass,{context:res, fct:
-
-    function(context, valid, options){
-      options.signupFeedback = 'Une erreur est survenue';
+  userController.addUser(email, username, pass, repass,
+    function(valid, options){
+      options.feedback = 'Une erreur est survenue';
       if(valid){
-        options.signupFeedback = validMessage['addUsername'];
+        options.feedback = validMessage['addUsername'];
       }else{
         if(options.id){
-          options.signupFeedback = errorMessage[options.id];
+          options.feedback = errorMessage[options.id];
         }else{
-          options.signupFeedback = errorMessage[options.error.id];
+          options.feedback = errorMessage[options.error.id];
         }
       }
       options.title = 'µFarm';
 
-      context.render('index', options);
-    }}
+      res.render('signup', options);
+    }
   );
 });
 
@@ -109,17 +128,18 @@ app.post("/login", function (req, res) {
 
 			userController.logUser(username, pass, function(valid, user){   
       if(valid){
+        user.pass = pass;
         res.cookie('user', user, { maxAge: 900000 });
         req.session.user = user;
         res.redirect("/profil");
       }else{
         if(user.id){
-          user.signupFeedback = errorMessage[user.id];
+          user.feedback = errorMessage[user.id];
         }else{
-          user.signupFeedback = 'Une erreur est survenue';;
+          user.feedback = 'Une erreur est survenue';;
         }
-	      user.title = 'µFarm';
-	      res.render('index', user);
+        user.title = 'µFarm';
+	      res.render('login', user);
       }
     }
   );

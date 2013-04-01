@@ -26,13 +26,13 @@ exports.addUser = function(user, callback)
 	if (user.email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]{2,}[.][a-zA-Z]{2,4}$/)) {
 		users.findOne({username:user.username}, function(error, obj) {
 			if (obj){
-				callback.fct(callback.context, false, {id: 'usernameTaken'});
+				callback(false, {id: 'usernameTaken'});
 			}
 			else 
 				{
 					users.findOne({email:user.email}, function(error, obj) {
 						if (obj){
-							callback.fct(callback.context, false, {id: 'emailTaken'});
+							callback(false, {id: 'emailTaken'});
 						}
 						else
 							{
@@ -42,9 +42,9 @@ exports.addUser = function(user, callback)
 								user.date = moment().format('MMMM Do YYYY, h:mm:ss a');
 								users.insert(user, {safe: true}, function(err, object) {
 						            if (err){
-						                callback.fct(callback.context, false, {id: null, error: err});
+						                callback(false, {id: null, error: err});
 						            }else{
-						                callback.fct(callback.context, true, user);
+						                callback(true, user);
 						            }
 						        }
 								);
@@ -61,20 +61,14 @@ exports.findUser = function(username, pass, callback)
 {
 	users.findOne({username:username}, function(error, obj) {
 
-		if (obj){
-			if(obj){
-				if(obj.pass == pass && obj.username == username){
-					callback(true, obj);
-				}else{
-					callback(false, {id: 'wrongPass'});
-				}
+		if(obj){
+			if(obj.pass == pass && obj.username == username){
+				callback(true, obj);
 			}else{
-				callback(false, {id: 'usernameNoTaken'});
+				callback(false, {id: 'wrongPass'});
 			}
+		}else{
+			callback(false, {id: 'usernameNoTaken'});
 		}
-		else 
-			{
-				return false;
-			}
 	});
 }

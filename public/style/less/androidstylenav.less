@@ -1,0 +1,28 @@
+@import "bootstrap/bootstrap.less"; // Bootstrap with the minimum impoted on the bootstrap/bootstrap.js
+@import "bootstrap/responsive.less"; // Bootstrap's responsive
+
+.navbar-inner, .navbar, .nav {
+	border: none;
+	background: @black!important;
+}
+
+.navbar .nav > li > a {
+	padding-bottom: 4px;
+}
+.nav > li{
+  border-bottom: solid 2px #1a5673;
+  	padding-bottom: 2px;
+  	margin-bottom: 4px;
+
+  &.active{
+  	padding-bottom: 0px;
+  	a{
+	  	border-bottom: solid 4px #2da5de;
+  		margin-bottom: -2px;
+	  }
+  }
+}
+
+header {
+  margin-bottom: 50px;
+}

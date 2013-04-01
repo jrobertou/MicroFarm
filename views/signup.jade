@@ -1,22 +1,28 @@
-form( method="post", action="/signup" )#signup-form.well.row-fluid
-	h1 Sign up
-	p.subheading Create your account
-	hr
-	if signupFeedback
-	p= signupFeedback
-	fieldset
-	label Email 
-	input(type="text", name="email").span12.required
-	label Username 
-	input(type="text", name="username").span12.required
-	label Password
-	input(type="password", name="pass").span12.required
-	label Repeat password
-	input(type="password", name="repass").span12.required
-	hr
-	button(type="submit")#btn-signup.btn.btn-block.btn-primary
-			i.icon-user.icon-white
-			|   Sign up
-	//input(type="checkbox", checked='checked').span2
-	//label#remember-me.checkbox Remember Me
-	div.clear-fix
+extends layout
+
+block content
+  div.container-fluid
+    div.row-fluid
+      div.span6.offset3
+        form( method="post", action="/signup" )#signup-form.well.row-fluid
+          h1 Sign up
+          p.subheading Create your account
+          hr
+          if feedback
+          p= feedback
+          fieldset
+          label Email 
+          input(type="text", name="email").span12.required
+          label Username 
+          input(type="text", name="username").span12.required
+          label Password
+          input(type="password", name="pass").span12.required
+          label Repeat password
+          input(type="password", name="repass").span12.required
+          hr
+          button(type="submit")#btn-signup.btn.btn-block.btn-primary
+              i.icon-user.icon-white
+              |   Sign up
+          //input(type="checkbox", checked='checked').span2
+          //label#remember-me.checkbox Remember Me
+          div.clear-fix
