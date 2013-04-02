@@ -38,6 +38,7 @@ var errorMessage = {
 
 };
 
+
 var validMessage = {
   'addUsername': 'Votre user a été créer, vous pouvez maintenant vous loguer'
 };
@@ -48,7 +49,22 @@ app.get('/', function(req, res){
     res.redirect('/profil');
   }else
   {
-    userController.autoLogin(req.cookies);
+    userController.autoLogin(req.cookies, function(valid, user){   
+      if(valid){
+        user.pass = pass;
+        res.cookie('user', user, { maxAge: 900000 });
+        req.session.user = user;
+        res.redirect("/profil");
+      }else{
+        if(user.id){
+          user.feedback = errorMessage[user.id];
+        }else{
+          user.feedback = 'Une erreur est survenue';;
+        }
+        user.title = 'µFarm';
+        res.render('login', user);
+      }
+    });
     res.render('index', {title: 'µFarm'});
   }
 });
@@ -59,7 +75,22 @@ app.get('/login', function(req, res){
     res.redirect('/profil');
   }else
   {
-    userController.autoLogin(req.cookies)
+    userController.autoLogin(req.cookies, function(valid, user){   
+      if(valid){
+        user.pass = pass;
+        res.cookie('user', user, { maxAge: 900000 });
+        req.session.user = user;
+        res.redirect("/profil");
+      }else{
+        if(user.id){
+          user.feedback = errorMessage[user.id];
+        }else{
+          user.feedback = 'Une erreur est survenue';;
+        }
+        user.title = 'µFarm';
+        res.render('login', user);
+      }
+    });
     res.render('login', {title: 'µFarm', feedback: null});
   }
 });
@@ -70,7 +101,22 @@ app.get('/signup', function(req, res){
     res.redirect('/profil');
   }else
   {
-    userController.autoLogin(req.cookies)
+    userController.autoLogin(req.cookies, function(valid, user){   
+      if(valid){
+        user.pass = pass;
+        res.cookie('user', user, { maxAge: 900000 });
+        req.session.user = user;
+        res.redirect("/profil");
+      }else{
+        if(user.id){
+          user.feedback = errorMessage[user.id];
+        }else{
+          user.feedback = 'Une erreur est survenue';;
+        }
+        user.title = 'µFarm';
+        res.render('login', user);
+      }
+    });
     res.render('signup', {title: 'µFarm', feedback: null});
   }
 });
@@ -139,10 +185,9 @@ app.post("/login", function (req, res) {
           user.feedback = 'Une erreur est survenue';;
         }
         user.title = 'µFarm';
-	      res.render('login', user);
+        res.render('login', user);
       }
-    }
-  );
+    });
 });
 
 http.createServer(app).listen(app.get('port'), function(){

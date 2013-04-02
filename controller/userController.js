@@ -19,12 +19,11 @@ exports.logUser = function(username, pass, callback)
 	userDb.findUser(username, pass, callback);		
 }
 
-exports.autoLogin = function(cookies, calback)
+exports.autoLogin = function(cookies, callback)
 {
 	console.log(cookies);
 	if(cookies.user){
-		this.logUser(cookies.username, cookies.pass, function(){
-
-		});
+		console.log('autologin');
+		this.logUser(cookies.username, cookies.pass, callback);
 	}	
 }
