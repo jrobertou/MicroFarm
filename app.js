@@ -28,48 +28,11 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-var errorMessage = {
-  'passwdsNoMatch': 'passwds-no-match',
-  'usernameTaken': 'username-taken',
-  'emailTaken': 'email-taken',
-  'invalidEmail': 'email-invalid',
-  'usernameNoTaken': 'usernameNoTaken',
-  'wrongPass': 'wrongPass'
-
-};
-
-
-var validMessage = {
-  'addUsername': 'Votre user a été créer, vous pouvez maintenant vous loguer'
-};
-
 app.get('/', function(req, res){
 
-  if(req.session && req.session.user){
-    res.redirect('/profil');
-  }else
-  {
-    userController.autoLogin(req.cookies, function(valid, user){   
-      if(valid){
-        user.pass = pass;
-        res.cookie('user', user, { maxAge: 900000 });
-        req.session.user = user;
-        res.redirect("/profil");
-      }else{
-        if(user.id){
-          user.feedback = errorMessage[user.id];
-        }else{
-          user.feedback = 'Une erreur est survenue';;
-        }
-        user.title = 'µFarm';
-        res.render('login', user);
-      }
-    });
-    res.render('index', {title: 'µFarm'});
-  }
-});
-
-app.get('/login', function(req, res){
+var callbackMessage = require('./helpers/callbackMessage.js'),
+  validMessage = callbackMessage.validMessage,
+  errorMessage = callbackMessage.errorMessage;
 
   if(req.session && req.session.user){
     res.redirect('/profil');
@@ -87,40 +50,12 @@ app.get('/login', function(req, res){
         }else{
           user.feedback = 'Une erreur est survenue';;
         }
-        user.title = 'µFarm';
         res.render('login', user);
       }
     });
-    res.render('login', {title: 'µFarm', feedback: null});
+    res.render('index', {feedback: null});
   }
 });
-
-app.get('/signup', function(req, res){
-
-  if(req.session && req.session.user){
-    res.redirect('/profil');
-  }else
-  {
-    userController.autoLogin(req.cookies, function(valid, user){   
-      if(valid){
-        user.pass = pass;
-        res.cookie('user', user, { maxAge: 900000 });
-        req.session.user = user;
-        res.redirect("/profil");
-      }else{
-        if(user.id){
-          user.feedback = errorMessage[user.id];
-        }else{
-          user.feedback = 'Une erreur est survenue';;
-        }
-        user.title = 'µFarm';
-        res.render('login', user);
-      }
-    });
-    res.render('signup', {title: 'µFarm', feedback: null});
-  }
-});
-
 
 app.get('/profil', function(req, res){
 	var currentuser = null;
@@ -132,7 +67,6 @@ app.get('/profil', function(req, res){
 		console.log(req.session.user);
 
 		res.render('profil.jade', {
-			title: 'µFarm', 
 			username: req.session.user.username,
 			email: req.session.user.email
 			});
@@ -162,9 +96,7 @@ app.post('/signup', function(req, res) {
           options.feedback = errorMessage[options.error.id];
         }
       }
-      options.title = 'µFarm';
-
-      res.render('signup', options);
+      res.render('index', options);
     }
   );
 });
@@ -184,8 +116,7 @@ app.post("/login", function (req, res) {
         }else{
           user.feedback = 'Une erreur est survenue';;
         }
-        user.title = 'µFarm';
-        res.render('login', user);
+        res.render('index', user);
       }
     });
 });

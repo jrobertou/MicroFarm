@@ -1,4 +1,4 @@
-var userDb = require('../server/userDb.js');
+var userDb = require('../data/userDb.js');
 
 exports.addUser = function(email, username, pass, repass, callback)
 {
@@ -12,12 +12,12 @@ exports.addUser = function(email, username, pass, repass, callback)
 	}else {
 		callback.fct(callback.context, false, 'passwdsNoMatch');
 	}
-}
+};
 
 exports.logUser = function(username, pass, callback)
 {
 	userDb.findUser(username, pass, callback);		
-}
+};
 
 exports.autoLogin = function(cookies, callback)
 {
@@ -26,4 +26,4 @@ exports.autoLogin = function(cookies, callback)
 		console.log('autologin');
 		this.logUser(cookies.username, cookies.pass, callback);
 	}	
-}
+};
