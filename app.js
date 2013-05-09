@@ -28,11 +28,12 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', function(req, res){
 
-var callbackMessage = require('./helpers/callbackMessage.js'),
-  validMessage = callbackMessage.validMessage,
-  errorMessage = callbackMessage.errorMessage;
+var callbackMessage = require('./helpers/callbackMessage.js');
+var validMessage = callbackMessage.validMessage(),
+  errorMessage = callbackMessage.errorMessage();
+
+app.get('/', function(req, res){
 
   if(req.session && req.session.user){
     res.redirect('/profil');
@@ -78,7 +79,6 @@ app.get('/profil', function(req, res){
 });
 
 app.post('/signup', function(req, res) {
-  console.log("new user");
   var email = req.body.email,
       username = req.body.username,
       pass = req.body.pass,
@@ -86,17 +86,18 @@ app.post('/signup', function(req, res) {
 
   userController.addUser(email, username, pass, repass,
     function(valid, options){
-      options.feedback = 'Une erreur est survenue';
+      var feedback = 'Une erreur est survenue';
       if(valid){
-        options.feedback = validMessage['addUsername'];
+        feedback = validMessage['addUsername'];
       }else{
         if(options.id){
-          options.feedback = errorMessage[options.id];
+          feedback = errorMessage[options.id];
         }else{
-          options.feedback = errorMessage[options.error.id];
+          feedback = options.error;
         }
       }
-      res.render('index', options);
+      console.log("this is feedback --- " + feedback);
+      res.render('index', {feedback:feedback});
     }
   );
 });

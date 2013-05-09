@@ -5,7 +5,7 @@ exports.errorMessage = function()
 		'usernameTaken': 'username-taken',
 		'emailTaken': 'email-taken',
 		'invalidEmail': 'email-invalid',
-		'usernameNoTaken': 'usernameNoTaken',
+		'usernameNoTaken': 'username No Taken',
 		'wrongPass': 'wrongPass'
 	};
 

@@ -10,7 +10,7 @@ exports.addUser = function(email, username, pass, repass, callback)
 			pass: pass
 		}, callback);
 	}else {
-		callback.fct(callback.context, false, 'passwdsNoMatch');
+		callback(false, 'passwdsNoMatch');
 	}
 };
 

@@ -42,6 +42,7 @@ exports.addUser = function(user, callback)
 								user.date = moment().format('MMMM Do YYYY, h:mm:ss a');
 								users.insert(user, {safe: true}, function(err, object) {
 						            if (err){
+						            	console.log("is the error realy is it "+err)
 						                callback(false, {id: null, error: err});
 						            }else{
 						                callback(true, user);
@@ -53,7 +54,7 @@ exports.addUser = function(user, callback)
 				}
 		});
 	}else{
-		callback.fct(callback.context, false, {id: 'invalidEmail'});
+		callback(false, {id: 'invalidEmail'});
 	}
 }
 
