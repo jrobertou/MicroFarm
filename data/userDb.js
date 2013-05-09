@@ -26,13 +26,13 @@ exports.addUser = function(user, callback)
 	if (user.email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]{2,}[.][a-zA-Z]{2,4}$/)) {
 		users.findOne({username:user.username}, function(error, obj) {
 			if (obj){
-				callback(false, {id: 'usernameTaken'});
+				callback(false, 'usernameTaken');
 			}
 			else 
 				{
 					users.findOne({email:user.email}, function(error, obj) {
 						if (obj){
-							callback(false, {id: 'emailTaken'});
+							callback(false, 'emailTaken');
 						}
 						else
 							{
@@ -42,8 +42,7 @@ exports.addUser = function(user, callback)
 								user.date = moment().format('MMMM Do YYYY, h:mm:ss a');
 								users.insert(user, {safe: true}, function(err, object) {
 						            if (err){
-						            	console.log("is the error realy is it "+err)
-						                callback(false, {id: null, error: err});
+						                callback(false, err);
 						            }else{
 						                callback(true, user);
 						            }
@@ -54,7 +53,7 @@ exports.addUser = function(user, callback)
 				}
 		});
 	}else{
-		callback(false, {id: 'invalidEmail'});
+		callback(false, 'invalidEmail');
 	}
 }
 
@@ -66,10 +65,10 @@ exports.findUser = function(username, pass, callback)
 			if(obj.pass == pass && obj.username == username){
 				callback(true, obj);
 			}else{
-				callback(false, {id: 'wrongPass'});
+				callback(false, 'wrongPass');
 			}
 		}else{
-			callback(false, {id: 'usernameNoTaken'});
+			callback(false, 'usernameNoTaken');
 		}
 	});
 }

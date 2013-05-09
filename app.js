@@ -30,14 +30,15 @@ app.configure('development', function(){
 
 
 var callbackMessage = require('./helpers/callbackMessage.js');
-var validMessage = callbackMessage.validMessage(),
-  errorMessage = callbackMessage.errorMessage();
+var validMessage = callbackMessage.validMessage,
+  errorMessage = callbackMessage.errorMessage;
 
 app.get('/', function(req, res){
 
   if(req.session && req.session.user){
     res.redirect('/profil');
-  }else
+  }
+  /*else
   {
     userController.autoLogin(req.cookies, function(valid, user){   
       if(valid){
@@ -54,6 +55,7 @@ app.get('/', function(req, res){
         res.render('login', user);
       }
     });
+*/
     res.render('index', {feedback: null});
   }
 });
@@ -63,14 +65,13 @@ app.get('/profil', function(req, res){
 
 	if(req.session && req.session.user){
 		currentuser = req.session.user;
-		var email = null;
-		var username = null;
+
 		console.log(req.session.user);
 
-		res.render('profil.jade', {
+		res.render('profil', {
 			username: req.session.user.username,
 			email: req.session.user.email
-			});
+		});
 
 	}else
 	{
@@ -85,18 +86,17 @@ app.post('/signup', function(req, res) {
       repass = req.body.repass;
 
   userController.addUser(email, username, pass, repass,
-    function(valid, options){
+    function(valid, error){
       var feedback = 'Une erreur est survenue';
       if(valid){
         feedback = validMessage['addUsername'];
       }else{
-        if(options.id){
-          feedback = errorMessage[options.id];
+        if(typeof(error) === "string"){
+          feedback = errorMessage[error];
         }else{
-          feedback = options.error;
+          feedback = error;
         }
       }
-      console.log("this is feedback --- " + feedback);
       res.render('index', {feedback:feedback});
     }
   );
@@ -105,15 +105,16 @@ app.post('/signup', function(req, res) {
 app.post("/login", function (req, res) {
   var username = req.body.username, pass = req.body.pass;
 
-			userController.logUser(username, pass, function(valid, user){   
+			userController.logUser(username, pass, function(valid, response){   
       if(valid){
+        var user = response;
         user.pass = pass;
         res.cookie('user', user, { maxAge: 900000 });
         req.session.user = user;
         res.redirect("/profil");
       }else{
-        if(user.id){
-          user.feedback = errorMessage[user.id];
+        if(typeof(response) === "string"){
+          user.feedback = errorMessage[response];
         }else{
           user.feedback = 'Une erreur est survenue';;
         }
