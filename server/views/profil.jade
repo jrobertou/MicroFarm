@@ -1,12 +1,11 @@
 extends layout
-
-div.container-fluid
+block content
 	div.row-fluid
 		div.span4.offset1
-			if username
-			p= username
+			if user
+			p= user.username
 		div.span4.offset1
-			if email
-			p= email
+			if user
+			p= user.email
 			
 //script(src='/js/helpers/ajax-send-form.js')

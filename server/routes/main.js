@@ -1,11 +1,11 @@
-
-app.get('/', function(req, res){
-
+exports.get = function(req, res)
+{
   if(req.session && req.session.user){
-    res.redirect('/profil');
-  }else
-  {
-    userController.autoLogin(req.cookies, function(valid, user){   
+    res.redirect('/profil', {logout: true});
+  }
+  else
+  {/*
+    accountManager.autoLogin(req.cookies, function(valid, user){   
       if(valid){
         user.pass = pass;
         res.cookie('user', user, { maxAge: 900000 });
@@ -17,10 +17,9 @@ app.get('/', function(req, res){
         }else{
           user.feedback = 'Une erreur est survenue';;
         }
-        user.title = 'µFarm';
         res.render('login', user);
       }
-    });
-    res.render('index', {title: 'µFarm'});
+    });*/
+    res.render('index', {feedback: null, logout: false});
   }
-});
+};
