@@ -26,40 +26,39 @@ exports.signup = function(req, res)
 
 exports.login = function (req, res) 
 {
-
 	var username = req.body.username, pass = req.body.pass;
 
-	var callback = function(valid, response){
+  var loginCallback = function(valid, response){
 
-      if(valid){
+    if(valid){
 
-        var user = response;
-        user.pass = pass;
-        res.cookie('user', user, { maxAge: 900000 });
-        req.session.user = user;
-        res.redirect("/profil");
-        var feedback = null;
+      var user = response;
+      user.pass = pass;
+      res.cookie('user', user, { maxAge: 900000 });
+      req.session.user = user;
+      res.redirect("/profil");
+      var feedback = null;
+
+    }else{
+
+      if(typeof(response) === "string"){
+
+        feedback = errorMessage[response];
 
       }else{
 
-        if(typeof(response) === "string"){
-
-          feedback = errorMessage[response];
-
-        }else{
-
-          feedback = 'Une erreur est survenue';
-
-        }
-
-        res.render('index', {user: user, feedback: feedback, logout: true});
+        feedback = 'Une erreur est survenue';
 
       }
-    };
 
-	accountManager.logUser(username, pass, callback);
+      res.render('index', {user: user, feedback: feedback, logout: true});
+    }
+  };
+  
 
+	accountManager.logUser(username, pass, loginCallback);
 };
+
 
 exports.logout = function (req, res) 
 {
