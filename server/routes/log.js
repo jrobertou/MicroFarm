@@ -1,4 +1,8 @@
-var accountManager = require('../modules/account.js');
+var accountManager = require('../modules/account.js'),
+  callbackMessage = require('../helpers/callbackMessage.js');
+
+var validMessage = callbackMessage.validMessage,
+  errorMessage = callbackMessage.errorMessage;
 
 exports.signup = function(req, res)
 {
@@ -20,7 +24,8 @@ exports.signup = function(req, res)
       }
       res.render('index', {feedback:feedback, logout: false});
     }; 
-
+  console.log("try to register a new user: ");
+  console.log("email:"+email+", username:"+username+", pass:"+pass+", repass:"+repass+"");
 	accountManager.addUser(email, username, pass, repass, callback);
 };
 

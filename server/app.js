@@ -31,10 +31,6 @@ var main = require('./routes/main.js'),
   log = require('./routes/log.js'),
   profil = require('./routes/profil.js');
 
-var callbackMessage = require('./helpers/callbackMessage.js');
-var validMessage = callbackMessage.validMessage,
-  errorMessage = callbackMessage.errorMessage;
-
 app.get('/', main.get);
 app.get('/profil', profil.get);
 app.post('/signup', log.signup);
