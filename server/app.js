@@ -29,13 +29,15 @@ app.configure('development', function(){
 
 var main = require('./routes/main.js'),
   log = require('./routes/log.js'),
-  profil = require('./routes/profil.js');
+  profil = require('./routes/profil.js'),
+  game = require('./routes/game.js');
 
 app.get('/', main.get);
 app.get('/profil', profil.get);
 app.post('/signup', log.signup);
 app.post("/login", log.login);
 app.get('/logout', log.logout);
+app.get('/game', game.get);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

@@ -22,7 +22,7 @@ exports.signup = function(req, res)
           feedback = error;
         }
       }
-      res.render('index', {feedback:feedback, logout: false});
+      res.render('index', {feedback:feedback, log: false});
     }; 
   console.log("try to register a new user: ");
   console.log("email:"+email+", username:"+username+", pass:"+pass+", repass:"+repass+"");
@@ -56,11 +56,9 @@ exports.login = function (req, res)
 
       }
 
-      res.render('index', {user: user, feedback: feedback, logout: true});
+      res.render('index', {user: user, feedback: feedback, log: true});
     }
   };
-  
-
 	accountManager.logUser(username, pass, loginCallback);
 };
 
