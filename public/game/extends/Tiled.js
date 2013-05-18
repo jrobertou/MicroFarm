@@ -73,12 +73,11 @@ Class.create("Tiled", {
 				}
 				self.tilesetsIndexed[self.tilesets[i].firstgid] = self.tilesets[i];
 			}
-			var _id, length = self.tilesetsIndexed.length + (Math.round(self.tilesets[self.tilesets.length-1].imagewidth / self.tile_h) * (Math.round(self.tilesets[self.tilesets.length-1].imagewidth / self.tile_w)));
+			var _id, length = self.tilesetsIndexed.length + (Math.round(self.tilesets[self.tilesets.length-1].imageheight / self.tile_h) * (Math.round(self.tilesets[self.tilesets.length-1].imagewidth / self.tile_w)));
 			for (var m=1; m < length; m++) {
 				_id = self.tilesetsIndexed[m] ? m : _id;
 				self.tilesetsIndexed[m] = self.tilesetsIndexed[_id];
 			}
-			console.log('tilesetsIndexed', length, self.tilesetsIndexed.length, self.tilesetsIndexed);
 			self._draw();
 		});
 	},
@@ -97,20 +96,12 @@ Class.create("Tiled", {
 						_id = this.layers[i].data[id];
 						if (_id != 0) {
 							tileset = this.tilesetsIndexed[_id];
-							if(tileset){
-								//console.log(this);
-								_id -= tileset.firstgid;
-								y = this.tile_h * Math.floor(_id / (Math.round(tileset.imagewidth / this.tile_h)));
-								x = this.tile_w * (_id % Math.round(tileset.imagewidth / this.tile_w));
-								
-								_tile.drawImage(tileset.name, x, y, this.tile_w, this.tile_h, j * this.tile_w, k * this.tile_h, this.tile_w, this.tile_h);
-								this.el_layers[i].append(_tile);
-							}else {
-								//console.log('error this');
-								//console.log(this);
-
-							}
+							_id -= tileset.firstgid;
+							y = this.tile_h * Math.floor(_id / (Math.round(tileset.imagewidth / this.tile_h)));
+							x = this.tile_w * (_id % Math.round(tileset.imagewidth / this.tile_w));
 							
+							_tile.drawImage(tileset.name, x, y, this.tile_w, this.tile_h, j * this.tile_w, k * this.tile_h, this.tile_w, this.tile_h);
+							this.el_layers[i].append(_tile);
 						}
 						id++;
 					}
@@ -242,58 +233,64 @@ Class.create("Tiled", {
 });
 
 /**
-	@doc tiled
-	@class Tiled Tiled is a general purpose tile map editor. It's built to be easy to use, yet flexible enough to work with varying game engines, whether your game is an RPG, platformer or Breakout clone. Tiled is free software and written in C++, using the Qt application framework.
-	
-	http://www.mapeditor.org
-	
-	 <p>Consider adding inserting Tiled.js</p>
-	 <code>
-		 <script src="extends/Tiled.js"></script>
-		 <script>
-		   var canvas = CE.defines("canvas_id").
-			extend(Tiled).
-			ready(function() {
-				
-			});
-		 </script>
-	 </code>
-	
-	@param {CanvasEngine.Scene} scene
-	@param {CanvasEngine.Element} el The layers are displayed on this element
-	@param {String} url Path to the JSON file of Tiled Map Editor
-	@example
-	<code>
+@doc tiled
+@class Tiled Tiled is a general purpose tile map editor. It's built to be easy to use, yet flexible enough to work with varying game engines, whether your game is an RPG, platformer or Breakout clone. Tiled is free software and written in C++, using the Qt application framework.
+
+http://www.mapeditor.org
+
+Consider adding inserting Tiled.js
+
+	 <script src="extends/Tiled.js"></script>
+	 <script>
+	   var canvas = CE.defines("canvas_id").
+		extend(Tiled).
+		ready(function() {
+			
+		});
+	 </script>
+
+
+@param {CanvasEngine.Scene} scene
+@param {CanvasEngine.Element} el The layers are displayed on this element
+@param {String} url Path to the JSON file of Tiled Map Editor
+@example
+
 	var canvas = CE.defines("canvas_id").
 		extend(Tiled).
 		ready(function() {
 			canvas.Scene.call("MyScene");
 		});
-			
-		canvas.Scene.new({
-			name: "MyScene",
-			materials: {
-				images: {
-					mytileset: "path/to/tileset.png"
-				}
-			},
-			ready: function(stage) {
-				 var el = this.createElement();
-				 var tiled = canvas.Tiled.new();
-				tiled.load(this, el, "map/map.json");
-				tiled.ready(function() {
-					 var tile_w = this.getTileWidth(),
-						 tile_h = this.getTileHeight(),
-						 layer_object = this.getLayerObject();
-					 stage.append(el);
-				});
-				
+		
+	canvas.Scene.new({
+		name: "MyScene",
+		materials: {
+			images: {
+				mytileset: "path/to/tileset.png"
 			}
-		});
-	</code>
+		},
+		ready: function(stage) {
+			 var el = this.createElement();
+			 var tiled = canvas.Tiled.new();
+			
+			tiled.ready(function() {
+				 var tile_w = this.getTileWidth(),
+					 tile_h = this.getTileHeight(),
+					 layer_object = this.getLayerObject();
+				 stage.append(el);
+			});
+			tiled.load(this, el, "map/map.json");
+		}
+	});
+
+1. `mytileset` in material object is the name of tileset in Tiled Map Editor
+2. `getLayer()` retrieves a layer. The name is the same as in Tiled Map Editor
+
+![](http://canvasengine.net/presentation/images/tiled2.png)
+	
 */
 var Tiled = {
 	Tiled: {
+		New: function() { return this["new"].apply(this, arguments); },
 		"new": function(scene, el, url) {
 			return Class["new"]("Tiled", [scene, el, url]);
 		}
