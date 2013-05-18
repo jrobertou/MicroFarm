@@ -95,15 +95,22 @@ Class.create("Tiled", {
 					for (var j=0 ; j < this.layers[i].width ; j++) {
 						_tile = this.scene.createElement();
 						_id = this.layers[i].data[id];
-						if (_id != 0 && this.tilesetsIndexed[_id]) {
+						if (_id != 0) {
 							tileset = this.tilesetsIndexed[_id];
-							console.log(tileset);
-							_id -= tileset.firstgid;
-							y = this.tile_h * Math.floor(_id / (Math.round(tileset.imagewidth / this.tile_h)));
-							x = this.tile_w * (_id % Math.round(tileset.imagewidth / this.tile_w));
+							if(tileset){
+								console.log(this);
+								_id -= tileset.firstgid;
+								y = this.tile_h * Math.floor(_id / (Math.round(tileset.imagewidth / this.tile_h)));
+								x = this.tile_w * (_id % Math.round(tileset.imagewidth / this.tile_w));
+								
+								_tile.drawImage(tileset.name, x, y, this.tile_w, this.tile_h, j * this.tile_w, k * this.tile_h, this.tile_w, this.tile_h);
+								this.el_layers[i].append(_tile);
+							}else {
+								console.log('error this');
+								console.log(this);
+
+							}
 							
-							_tile.drawImage(tileset.name, x, y, this.tile_w, this.tile_h, j * this.tile_w, k * this.tile_h, this.tile_w, this.tile_h);
-							this.el_layers[i].append(_tile);
 						}
 						id++;
 					}
