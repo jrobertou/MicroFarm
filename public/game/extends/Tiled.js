@@ -31,6 +31,7 @@ Class.create("Tiled", {
 	layers: [],
 	objects: [],
 	scene: null,
+	squareCollection: [],
 	_ready: null,
 	initialize: function() {
 	},
@@ -99,7 +100,12 @@ Class.create("Tiled", {
 							_id -= tileset.firstgid;
 							y = this.tile_h * Math.floor(_id / (Math.round(tileset.imagewidth / this.tile_h)));
 							x = this.tile_w * (_id % Math.round(tileset.imagewidth / this.tile_w));
-							
+
+							this.squareCollection[j+'-'+k] = {
+								id: this.squareCollection.length,
+								origin: {x: j, y: k},
+								isWalking: true
+							};
 							_tile.drawImage(tileset.name, x, y, this.tile_w, this.tile_h, j * this.tile_w, k * this.tile_h, this.tile_w, this.tile_h);
 							this.el_layers[i].append(_tile);
 						}
@@ -194,6 +200,11 @@ Class.create("Tiled", {
 	 */
 	getTileInMap: function(x, y) {
 		return this.width * y + x;
+	},
+
+
+	getSquareInMap: function(x, y) {
+		return {x:floor(x/this.width), y:floor(y/this.height)};
 	},
 	 /**
 		@doc tiled/

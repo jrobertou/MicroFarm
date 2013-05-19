@@ -2,7 +2,9 @@ var canvas = CE.defines('canvas_id').
     extend(Scrolling).
     extend(Spritesheet).
     extend(Tiled).
+    extend(Input).
     extend(Caracter).
+    extend(Map).
     ready(function() {
       canvas.Scene.call('MyScene');
     });
@@ -12,37 +14,28 @@ canvas.Scene.new({
   materials: {
     images: {
       CastleTown: '/img/CastleTown.png',
-      ball: '/img/ball.png'
+      ball: '/img/ball.png',
+      chara: '/img/chara.png'
     }
   },
+  map: null,
+  mainCaracter: null,
+
 
   ready: function(stage) {
     var scene = this;
-    var map, tiled;
 
-    map = this.createElement();
+    scene.map = canvas.Map.new(stage, this);
 
-    tiled = canvas.Tiled.new();
+    $("#canvas_id").on("mapLoad", {stage:stage, scene: scene}, scene.mapLoad);
+    
+  },
 
-    console.log('Avant Tiled Load');
-    tiled.load(this, map, '/maps/TestMap.json');
-    console.log('Après Tiled Load');
+  mapLoad: function(e){
+    var stage = e.data.stage,
+      scene = e.data.scene;
 
-    console.log('Avant Tiled Ready');
-    tiled.ready(function() {
-      var tileW = this.getTileWidth(),
-        tileH = this.getTileHeight(),
-        layerObj = this.getLayerObject();
-    });
-    console.log('Après Tiled Ready');
-
-    stage.append(map);
-
-
-
-    caracter = canvas.Caracter.new(stage, this);
-    map.on('click', caracter.move);
-    caracter.el.on('click', caracter.move);
-
+    scene.mainCaracter = canvas.Caracter.new(stage, scene);
+    $("#canvas_id").on('click', {caracter: scene.mainCaracter}, scene.mainCaracter.move);
   }
 });
