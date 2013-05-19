@@ -5,6 +5,7 @@ var canvas = CE.defines('canvas_id').
     extend(Input).
     extend(Caracter).
     extend(Map).
+    extend(Animation).
     ready(function() {
       canvas.Scene.call('MyScene');
     });
@@ -21,12 +22,16 @@ canvas.Scene.new({
   map: null,
   mainCaracter: null,
 
+  events: function(stage, scene){
+    $("#canvas_id").on('click', {map: scene.map}, scene.map.clickOnMap);
+    $('#canvas_id').mousemove({map:scene.map}, scene.map.mouseMouveOnMap);
+    
+  },
 
   ready: function(stage) {
     var scene = this;
 
-    scene.map = canvas.Map.new(stage, this);
-
+    scene.map = canvas.Map.new(stage, scene);
     $("#canvas_id").on("mapLoad", {stage:stage, scene: scene}, scene.mapLoad);
     
   },
@@ -36,6 +41,7 @@ canvas.Scene.new({
       scene = e.data.scene;
 
     scene.mainCaracter = canvas.Caracter.new(stage, scene);
-    $("#canvas_id").on('click', {caracter: scene.mainCaracter}, scene.mainCaracter.move);
-  }
+    scene.events(stage, scene);
+  },
+
 });

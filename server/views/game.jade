@@ -2,6 +2,8 @@ extends layout
 block content
 	div.container-fluid
 		div.row-fluid
-			div.span12
-				canvas#canvas_id(width='980', height='800')
+			div.span11#canvasContainer
+				canvas#canvas_id(position='absolute', width='960', height='320')
+			div.span1
+				div.mouse
 	include footerGame

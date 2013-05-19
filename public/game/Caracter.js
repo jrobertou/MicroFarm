@@ -7,6 +7,7 @@ Class.create("Caracter", {
 	stage: null,
 	scene: null,
 	tiled: null,
+	animation: null,
 
 	initialize: function(stage, scene) {
 		this.stage = stage;
@@ -22,42 +23,100 @@ Class.create("Caracter", {
         this.el.setOriginPoint("middle");
         this.stage.append(this.el);
        	this.stage.refresh();
-       	this.el.on("click", this.dragright);
+       	this.initAnimation();
 	},
 	 /**
 		@doc tiled/
 		@method ready Calls the function when the layers are drawn
 		@param {Function} callback
 	 */
-	move: function(event) {
-		var caracter = event.data.caracter;
-       caracter.el.x = event.offsetX-(caracter.width/2);
-       caracter.el.y = event.offsetY-(caracter.height/2);
-       var tmpX = Math.floor(event.offsetX/32)
-       		tmpY = Math.floor(event.offsetY/32);
-       console.log([tmpX+'-'+tmpY]);
-       console.log(caracter.scene.map.squareCollection[tmpX+'-'+tmpY]);
-       caracter.stage.refresh();
+	move: function(offsetX, offsetY) {
+		var caracter = this;
+
+       //caracter.el.x = offsetX-(caracter.width/2);
+       //caracter.el.y = offsetY-(caracter.height/2);
+       var targetX = Math.floor(offsetX/32),
+       		targetY = Math.floor(offsetY/32),
+       		nowX = Math.floor(caracter.el.x/32),
+       		nowY = Math.floor(caracter.el.y/32);
+
+       	var deltaX = targetX - nowX,
+       		deltaY = targetY - nowY;
+
+       	if(deltaX > deltaY){
+
+       		var callback = function(){
+	   			caracter.animation.stop();
+
+	   			var callback = function(){
+	       			caracter.animation.stop();
+	       		};
+	   			caracter.nextSquareY(deltaY*32, callback);
+	   		};
+       		caracter.nextSquareX(deltaX*32, callback);
+       	}
+       	else{
+
+	    	var callback = function(){
+	   			caracter.animation.stop();
+
+	   			var callback = function(){
+	       			caracter.animation.stop();
+	       		};
+	   			caracter.nextSquareX(deltaX*32, callback);
+	   		};
+       		caracter.nextSquareY(deltaY*32, callback);
+       	}
+    	caracter.stage.refresh();
+    },
+
+    nextSquareX: function(distance, callback){
+		var caracter = this;
+    	caracter.animation.play("walkX", "loop");
+
+    	canvas.Timeline.new(caracter.el).to({
+            x: caracter.el.x+distance
+        }, Math.floor(distance/6)).call(callback);
+
+    },
+
+    nextSquareY: function(distance, callback){
+		var caracter = this;
+
+    	caracter.animation.play("walkY", "loop");
+
+    	canvas.Timeline.new(caracter.el).to({
+            y: caracter.el.y+distance
+        }, Math.floor(distance/6)).call(callback);
+
     },
 
 
-	walk: function() {
+	initAnimation: function() {
         var animation = canvas.Animation.new({
                 images: "chara",
                 animations: {
-                    walk: {
+                    walkX: {
                         frames: [8, 11],
                         size: {
-                            width: 32,
-                            height: 48
+                            width: 128/4,
+                            height: 192/4
                         },
-                        frequence: 7
+                        frequence: 3
+                    },
+                    walkY: {
+                        frames: [0, 3],
+                        size: {
+                            width: 128/4,
+                            height: 192/4
+                        },
+                        frequence: 3
                     }
                 }
             });
-        this.stage.append(el);
-        animation.add(el);
-        animation.play("walk", "loop");
+        //this.stage.append(el);
+        animation.add(this.el);
+        this.animation = animation;
 
     }
 
