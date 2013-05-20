@@ -19,11 +19,12 @@ Class.create("Caracter", {
 		this.el = this.scene.createElement();
 		this.el.width = this.width;
 		this.el.height = this.height;
-        this.el.drawImage(this.name);
-        this.el.setOriginPoint("middle");
-        this.stage.append(this.el);
-       	this.stage.refresh();
-       	this.initAnimation();
+    this.el.drawImage(this.name);
+    this.el.setOriginPoint("middle");
+    this.stage.append(this.el);
+   	this.stage.refresh();
+   	this.initAnimation();
+    this.animation.play("walkInit", "loop");
 	},
 	 /**
 		@doc tiled/
@@ -115,6 +116,14 @@ Class.create("Caracter", {
         var animation = canvas.Animation.new({
                 images: "chara",
                 animations: {
+                    walkInit: {
+                        frames: [0, 0],
+                        size: {
+                            width: 128/4,
+                            height: 192/4
+                        },
+                        frequence: 0
+                    },
                     walkX: {
                         frames: [8, 11],
                         size: {
