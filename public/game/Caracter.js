@@ -8,7 +8,7 @@ Class.create("Caracter", {
 	scene: null,
 	tiled: null,
 	animation: null,
-	speedAnimation: 2,
+	speedAnimation: 3,
 
 	initialize: function(stage, scene) {
 		this.stage = stage;
@@ -20,12 +20,12 @@ Class.create("Caracter", {
 		this.el = this.scene.createElement();
 		this.el.width = this.width;
 		this.el.height = this.height;
-    this.el.drawImage(this.name);
-    this.el.setOriginPoint("middle");
-    this.stage.append(this.el);
-   	this.stage.refresh();
-   	this.initAnimation();
-    this.animation.play("walkInit", "loop");
+	    this.el.drawImage(this.name);
+	    this.el.setOriginPoint("middle");
+	    this.stage.append(this.el);
+	   	this.stage.refresh();
+	   	this.initAnimation();
+	    this.animation.play("walkInit");
 	},
 	 /**
 		@doc tiled/
@@ -55,15 +55,14 @@ Class.create("Caracter", {
        	else{
 
        		caracter.nextSquareY(delta, 'y');
-       	}
-    	caracter.stage.refresh();
-    	
+       	}    	
     },
 
     nextSquareX: function(delta, firstCall){
 
     	var caracter = this,
-    		map = this.scene.map;
+    		map = this.scene.map,
+    		speed = Math.abs(delta.x);
 
 		if(delta.x < 0) {
 
@@ -81,7 +80,7 @@ Class.create("Caracter", {
     	canvas.Timeline.new(caracter.el).to({
 	            x: delta.x
 	        },
-        	Math.floor(delta.x/caracter.speedAnimation)).call(function(){
+        	speed).call(function(){
         		caracter.animation.stop();
         		if(firstCall == 'x'){
         			caracter.nextSquareY(delta, firstCall);
@@ -95,7 +94,8 @@ Class.create("Caracter", {
 		
 		console.log(delta);
         var caracter = this,
-    		map = this.scene.map;
+    		map = this.scene.map
+    		speed = Math.abs(delta.y);
 
 		if(delta.y < 0) {
 
@@ -113,7 +113,7 @@ Class.create("Caracter", {
     	canvas.Timeline.new(caracter.el).to({
 	            y: delta.y
 	        },
-        	Math.floor(delta.y/caracter.speedAnimation)).call(function(){
+        	speed).call(function(){
         		caracter.animation.stop();
         		if(firstCall == 'y'){
         			caracter.nextSquareX(delta, firstCall);

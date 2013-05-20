@@ -36,6 +36,7 @@ canvas.Scene.new({
     
   },
   render: function(stage) {
+    if(this.scrolling)
     this.scrolling.update();
     stage.refresh();
   },
