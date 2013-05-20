@@ -42,6 +42,25 @@ canvas.Scene.new({
 
     scene.mainCaracter = canvas.Caracter.new(stage, scene);
     scene.events(stage, scene);
+    scrolling();
   },
+  scrolling: function()
+  {
+    //Création du Scrolling avec la taille d'un Tile
+    this.scrolling = canvas.Scrolling.new(this, 32, 32);
+    
+     //On définit en fonction de quoi bouge la Camera
+    //Normalement le var mainCaracter = this.createElement(); doit déja êter fais
+    this.scrolling.setMainElement(this.mainCaracter);
 
+    //Ajout du Scroll à la Map
+    //Normalement le var map = this.createElement(); doit déja êter fais
+    this.scrolling.addScroll({
+       element: this.map, 
+       speed: 3,
+       block: true,
+       width: 960,
+       height: 320
+    });
+  }
 });
