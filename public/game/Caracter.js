@@ -43,15 +43,17 @@ Class.create("Caracter", {
        	var deltaX = targetX - nowX,
        		deltaY = targetY - nowY;
 
-       	if(deltaX > deltaY){
+       		console.log(deltaX+' : '+deltaY);
+
+       	if(Math.abs(deltaX) > Math.abs(deltaY)){
 
        		var callback = function(){
 	   			caracter.animation.stop();
 
-	   			var callback = function(){
+	   			var callback2 = function(){
 	       			caracter.animation.stop();
 	       		};
-	   			caracter.nextSquareY(deltaY*32, callback);
+	   			caracter.nextSquareY(deltaY*32, callback2);
 	   		};
        		caracter.nextSquareX(deltaX*32, callback);
        	}
@@ -60,10 +62,10 @@ Class.create("Caracter", {
 	    	var callback = function(){
 	   			caracter.animation.stop();
 
-	   			var callback = function(){
+	   			var callback2 = function(){
 	       			caracter.animation.stop();
 	       		};
-	   			caracter.nextSquareX(deltaX*32, callback);
+	   			caracter.nextSquareX(deltaX*32, callback2);
 	   		};
        		caracter.nextSquareY(deltaY*32, callback);
        	}
@@ -71,23 +73,40 @@ Class.create("Caracter", {
     },
 
     nextSquareX: function(distance, callback){
-		var caracter = this;
-    	caracter.animation.play("walkX", "loop");
-
+    	var caracter = this;
+		if(distance < 0) {
+			caracter.animation.play("walkXback", "loop");
+			ditance = caracter.el.x - Math.abs(distance) ;
+			console.log(' - '+caracter.el.x)
+		}
+		else {
+			caracter.animation.play("walkX", "loop");
+			ditance = caracter.el.x + Math.abs(distance);
+		}
+		console.log('nextSquareX: '+distance);
     	canvas.Timeline.new(caracter.el).to({
-            x: caracter.el.x+distance
-        }, Math.floor(distance/6)).call(callback);
+            x: Math.abs(distance)
+        }, Math.floor(Math.abs(distance)/6)).call(callback);
 
     },
 
     nextSquareY: function(distance, callback){
 		var caracter = this;
 
-    	caracter.animation.play("walkY", "loop");
+		if(distance < 0) {
+    		caracter.animation.play("walkYback", "loop");
+			ditance = caracter.el.y - Math.abs(distance);
+		}
+		else {
+    		caracter.animation.play("walkY", "loop");
+			ditance = caracter.el.y + Math.abs(distance);
+		}
 
+
+		console.log('nextSquareY: '+distance);
     	canvas.Timeline.new(caracter.el).to({
-            y: caracter.el.y+distance
-        }, Math.floor(distance/6)).call(callback);
+            y: Math.abs(distance)
+        }, Math.floor(Math.abs(distance)/6)).call(callback);
 
     },
 
@@ -104,8 +123,24 @@ Class.create("Caracter", {
                         },
                         frequence: 3
                     },
+                    walkXback: {
+                        frames: [4, 7],
+                        size: {
+                            width: 128/4,
+                            height: 192/4
+                        },
+                        frequence: 3
+                    },
                     walkY: {
                         frames: [0, 3],
+                        size: {
+                            width: 128/4,
+                            height: 192/4
+                        },
+                        frequence: 3
+                    },
+                    walkYback: {
+                        frames: [12, 15],
                         size: {
                             width: 128/4,
                             height: 192/4

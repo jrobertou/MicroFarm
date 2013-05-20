@@ -106,6 +106,7 @@ Class.create("Tiled", {
 								origin: {x: j, y: k},
 								canWalkOnIt: true
 							};
+							
 							_tile.drawImage(tileset.name, x, y, this.tile_w, this.tile_h, j * this.tile_w, k * this.tile_h, this.tile_w, this.tile_h);
 							this.el_layers[i].append(_tile);
 						}

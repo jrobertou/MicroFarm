@@ -24,9 +24,11 @@ Class.create("Map", {
        	tiled.load(map.scene, map.el, '/maps/TestMap.json');
     
 	    tiled.ready(function() {
+
 	        map.squareCollection = this.squareCollection;
 	        map.stage.append(map.el);
 	        $("#canvas_id").trigger("mapLoad");
+
 	    });
 	},
 
