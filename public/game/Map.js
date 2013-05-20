@@ -59,8 +59,6 @@ Class.create("Map", {
 		map.hoverSquare.remove();
 		map.hoverSquare = map.newSquare(coord.x, coord.y, "#f3f3f3");
 		map.stage.append(map.hoverSquare);
-		
-				
 	},
 
 	clickOnMap: function(e){
