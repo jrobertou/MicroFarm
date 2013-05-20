@@ -53,7 +53,7 @@ Class.create("Map", {
 		var map = e.data.map,
 			coord = map.coordonatesToSquare(e.offsetX, e.offsetY);
 
-		$('.mouse').html(e.offsetX+', '+ e.offsetY);
+		$('.mouse').html(JSON.stringify(coord));
 		
 		if(map.hoverSquare)
 		map.hoverSquare.remove();
