@@ -8,6 +8,7 @@ Class.create("Caracter", {
 	scene: null,
 	tiled: null,
 	animation: null,
+	speedAnimation: 2,
 
 	initialize: function(stage, scene) {
 		this.stage = stage;
@@ -32,82 +33,93 @@ Class.create("Caracter", {
 		@param {Function} callback
 	 */
 	move: function(offsetX, offsetY) {
-		var caracter = this;
+		var caracter = this,
+			map = caracter.scene.map;
 
        //caracter.el.x = offsetX-(caracter.width/2);
        //caracter.el.y = offsetY-(caracter.height/2);
-       var targetX = Math.floor(offsetX/32),
-       		targetY = Math.floor(offsetY/32),
-       		nowX = Math.floor(caracter.el.x/32),
-       		nowY = Math.floor(caracter.el.y/32);
+       var target = map.coordonatesToSquare(offsetX, offsetY),
+       		now =  map.coordonatesToSquare(caracter.el.x, caracter.el.y);
 
-       	var deltaX = targetX - nowX,
-       		deltaY = targetY - nowY;
+       	var deltaX = target.x - now.x,
+       		deltaY = target.y - now.y;
 
-       		console.log(deltaX+' : '+deltaY);
+       	console.log(deltaX+' : '+deltaY);
+
+       	var delta = map.squareToCoordonates(deltaX, deltaY);
 
        	if(Math.abs(deltaX) > Math.abs(deltaY)){
 
-       		var callback = function(){
-	   			caracter.animation.stop();
-
-	   			var callback2 = function(){
-	       			caracter.animation.stop();
-	       		};
-	   			caracter.nextSquareY(deltaY*32, callback2);
-	   		};
-       		caracter.nextSquareX(deltaX*32, callback);
+       		caracter.nextSquareX(delta, 'x');
        	}
        	else{
 
-	    	var callback = function(){
-	   			caracter.animation.stop();
-
-	   			var callback2 = function(){
-	       			caracter.animation.stop();
-	       		};
-	   			caracter.nextSquareX(deltaX*32, callback2);
-	   		};
-       		caracter.nextSquareY(deltaY*32, callback);
+       		caracter.nextSquareY(delta, 'y');
        	}
     	caracter.stage.refresh();
+    	
     },
 
-    nextSquareX: function(distance, callback){
-    	var caracter = this;
-		if(distance < 0) {
+    nextSquareX: function(delta, firstCall){
+
+    	var caracter = this,
+    		map = this.scene.map;
+
+		if(delta.x < 0) {
+
 			caracter.animation.play("walkXback", "loop");
-			ditance = caracter.el.x - Math.abs(distance) ;
-			console.log(' - '+caracter.el.x)
+			delta.x = caracter.el.x - Math.abs(delta.x);
+
 		}
 		else {
+
 			caracter.animation.play("walkX", "loop");
-			ditance = caracter.el.x + Math.abs(distance);
+			delta.x = caracter.el.x + Math.abs(delta.x);
+
 		}
-		console.log('nextSquareX: '+distance);
+
     	canvas.Timeline.new(caracter.el).to({
-            x: Math.abs(distance)
-        }, Math.floor(Math.abs(distance)/6)).call(callback);
+	            x: delta.x
+	        },
+        	Math.floor(delta.x/caracter.speedAnimation)).call(function(){
+        		caracter.animation.stop();
+        		if(firstCall == 'x'){
+        			caracter.nextSquareY(delta, firstCall);
+        		}
+        	}
+        );
 
     },
 
-    nextSquareY: function(distance, callback){
-		var caracter = this;
+    nextSquareY: function(delta, firstCall){
+		
+		console.log(delta);
+        var caracter = this,
+    		map = this.scene.map;
 
-		if(distance < 0) {
+		if(delta.y < 0) {
+
     		caracter.animation.play("walkYback", "loop");
-			ditance = caracter.el.y - Math.abs(distance);
+			delta.y = caracter.el.y - Math.abs(delta.y);
+
 		}
 		else {
+
     		caracter.animation.play("walkY", "loop");
-			ditance = caracter.el.y + Math.abs(distance);
+			delta.y = caracter.el.y + Math.abs(delta.y);
+
 		}
 
-
-		console.log('nextSquareY: '+distance);
     	canvas.Timeline.new(caracter.el).to({
-            y: Math.abs(distance)
-        }, Math.floor(Math.abs(distance)/6)).call(callback);
+	            y: delta.y
+	        },
+        	Math.floor(delta.y/caracter.speedAnimation)).call(function(){
+        		caracter.animation.stop();
+        		if(firstCall == 'y'){
+        			caracter.nextSquareX(delta, firstCall);
+        		}
+        	}
+        );
 
     },
 

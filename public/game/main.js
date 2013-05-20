@@ -24,7 +24,7 @@ canvas.Scene.new({
 
   events: function(stage, scene) {
     $("#canvas_id").on('click', {map: scene.map}, scene.map.clickOnMap);
-    $('#canvas_id').mousemove({map:scene.map}, scene.map.mouseMouveOnMap);
+    $('#canvas_id').mousemove({map:scene.map}, scene.map.mouseMoveOnMap);
     
   },
 

@@ -7,6 +7,8 @@ Class.create("Map", {
 	squareCollection: null,
 	hoverSquare: null,
 	clickSquare: null,
+	squareWidth: 32,
+	squareHeight: 32,
 
 
 	initialize: function(stage, scene) {
@@ -32,30 +34,38 @@ Class.create("Map", {
 	    });
 	},
 
-	mouseToSquare: function(x, y){
-		var tmpX = Math.floor(event.offsetX/32),
-		  tmpY = Math.floor(event.offsetY/32);
+	coordonatesToSquare: function(x, y){
+		var map = this;
+		var tmpX = Math.floor(x/32),
+		  tmpY = Math.floor(y/32);
+		return {x:tmpX, y:tmpY};
+	},
+
+	squareToCoordonates: function(squreX, squreY){
+		var map = this;
+		var tmpX = Math.floor(squreX * 32),
+		  tmpY = Math.floor(squreY * 32);
 		return {x:tmpX, y:tmpY};
 	},
 
 
-	mouseMouveOnMap: function(e){
+	mouseMoveOnMap: function(e){
 		var map = e.data.map,
-			coord = map.mouseToSquare(e.offsetX, e.offsetY);
+			coord = map.coordonatesToSquare(e.offsetX, e.offsetY);
 
 		$('.mouse').html(e.offsetX+', '+ e.offsetY);
-		/*
+		
 		if(map.hoverSquare)
 		map.hoverSquare.remove();
 		map.hoverSquare = map.newSquare(coord.x, coord.y, "#f3f3f3");
 		map.stage.append(map.hoverSquare);
-		*/
+		
 				
 	},
 
 	clickOnMap: function(e){
 		var map = e.data.map,
-			coord = map.mouseToSquare(e.offsetX, e.offsetY);
+			coord = map.coordonatesToSquare(e.offsetX, e.offsetY);
 
 		if(map.squareCollection[coord.x+'-'+coord.y].canWalkOnIt){
 			if(map.clickSquare)
@@ -69,12 +79,11 @@ Class.create("Map", {
 
 	newSquare: function(x, y, color){
 		var el = this.scene.createElement();
-
-		x = x*32;
-		y = y*32;
+		
+		var coor = this.squareToCoordonates(x, y);
 
         el.strokeStyle = color;
-        el.strokeRect(x, y, 32, 32);
+        el.strokeRect(coor.x, coor.y, 32, 32);
 		return el;
 	}
 
