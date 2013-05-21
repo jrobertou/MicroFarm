@@ -43,8 +43,8 @@ Class.create("Map", {
 
 	squareToCoordonates: function(squreX, squreY){
 		var map = this;
-		var tmpX = Math.floor(squreX * 32),
-		  tmpY = Math.floor(squreY * 32);
+		var tmpX = squreX * 32,
+		  tmpY = squreY * 32;
 		return {x:tmpX, y:tmpY};
 	},
 
@@ -70,7 +70,7 @@ Class.create("Map", {
 			map.clickSquare.remove();
 			map.clickSquare = map.newSquare(coord.x, coord.y, "green");
 			map.stage.append(map.clickSquare);
-    		map.scene.mainCaracter.move(e.offsetX, e.offsetY);
+    		map.scene.mainCaracter.initMove(coord.x, coord.y);
 		}
 				
 	},

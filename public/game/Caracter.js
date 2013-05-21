@@ -9,6 +9,7 @@ Class.create("Caracter", {
 	tiled: null,
 	animation: null,
 	speedAnimation: 3,
+	target: null,
 
 	initialize: function(stage, scene) {
 		this.stage = stage;
@@ -21,108 +22,124 @@ Class.create("Caracter", {
 		this.el.width = this.width;
 		this.el.height = this.height;
 	    this.el.drawImage(this.name);
-	    this.el.setOriginPoint("middle");
 	    this.stage.append(this.el);
 	   	this.stage.refresh();
 	   	this.initAnimation();
-	    this.animation.play("walkInit");
+	    this.animation.play("walkInit", 'loop');
 	},
 	 /**
 		@doc tiled/
 		@method ready Calls the function when the layers are drawn
 		@param {Function} callback
 	 */
-	move: function(offsetX, offsetY) {
+	initMove: function(squareX, squareY) {
 		var caracter = this,
 			map = caracter.scene.map;
-
+		if(caracter.animation)
+			caracter.animation.stop();
        //caracter.el.x = offsetX-(caracter.width/2);
        //caracter.el.y = offsetY-(caracter.height/2);
-       var target = map.coordonatesToSquare(offsetX, offsetY),
-       		now =  map.coordonatesToSquare(caracter.el.x, caracter.el.y);
+       	var now =  map.coordonatesToSquare(caracter.el.x, caracter.el.y);
 
-       	var deltaX = target.x - now.x,
-       		deltaY = target.y - now.y;
+       	caracter.targetPosition = {x: squareX!=now.x?squareX:null, y: squareY!=now.y?squareY:null};
 
-       	console.log(deltaX+' : '+deltaY);
+       	var target = this.targetPosition;
 
-       	var delta = map.squareToCoordonates(deltaX, deltaY);
+       	if(target.x || target.y){
 
-       	if(Math.abs(deltaX) > Math.abs(deltaY)){
+       		var deltaX = target.x - now.x,
+	       		deltaY = target.y - now.y;
 
-       		caracter.nextSquareX(delta, 'x');
-       	}
-       	else{
+	       	console.log(deltaX+' : '+deltaY);
 
-       		caracter.nextSquareY(delta, 'y');
-       	}    	
+	       	var delta = map.squareToCoordonates(deltaX, deltaY);
+
+	       	var xdirection = (deltaX > 0)?'x':'-x',
+	       		ydirection = (deltaY > 0)?'y':'-y';
+
+	       	deltaX = Math.abs(deltaX);
+	       	deltaY = Math.abs(deltaY);
+	       	caracter.target = null;
+
+	       	if(deltaX > deltaY){
+	       		if(target.y)
+	       			caracter.target = {direction: ydirection, nb: deltaY};
+	       		console.log('x ' + deltaX + JSON.stringify(caracter.target));
+	    		caracter.nextSquare(xdirection, deltaX);	       		
+	       	}
+	    	else{
+	    		if(target.x)
+	       			caracter.target = {direction: xdirection, nb: deltaX};
+	       		console.log('y ' + deltaY + JSON.stringify(caracter.target));
+	    		caracter.nextSquare(ydirection, deltaY);
+	    	}
+	       		
+       	}	
     },
 
-    nextSquareX: function(delta, firstCall){
 
+    nextSquare: function(direction, nb){
     	var caracter = this,
-    		map = this.scene.map,
-    		speed = Math.abs(delta.x);
+    		targetPosition;
 
-		if(delta.x < 0) {
+		switch(direction) {
+			case 'x': 
+				caracter.animation.play("walkX", "loop");
+				targetPosition = caracter.el.x + 32;
+				break;
+			case '-x':
+				caracter.animation.play("walkXback", "loop");
+				targetPosition = caracter.el.x - 32;
+				break;
+			case 'y': 
+				caracter.animation.play("walkY", "loop");
+				targetPosition = caracter.el.y + 32;
+				break;
+			case '-y': 
+				caracter.animation.play("walkYback", "loop");
+				targetPosition = caracter.el.y - 32;
+				break;
+			default:break;
+		}
 
-			caracter.animation.play("walkXback", "loop");
-			delta.x = caracter.el.x - Math.abs(delta.x);
-
+		if(direction == 'x' || direction == '-x') {
+			canvas.Timeline.new(caracter.el).to({
+					x: targetPosition,
+					y: caracter.el.y
+		        },
+	        	caracter.speedAnimation, Ease.linear).call(function(){
+	        		caracter.animation.stop();
+	        		--nb;
+	        		if(nb > 0){
+	        			caracter.nextSquare(direction, nb);
+	        		}
+	        		else if(caracter.target) {
+	        			var tmpTarget = caracter.target;
+	        			caracter.target = null;
+	        			caracter.nextSquare(tmpTarget.direction, tmpTarget.nb);
+	        		}
+        	});
 		}
 		else {
-
-			caracter.animation.play("walkX", "loop");
-			delta.x = caracter.el.x + Math.abs(delta.x);
-
+			canvas.Timeline.new(caracter.el).to({
+					x: caracter.el.x,
+					y: targetPosition
+		        },
+	        	caracter.speedAnimation, Ease.linear).call(function(){
+	        		caracter.animation.stop();
+	        		--nb;
+	        		if(nb > 0){
+	        			caracter.nextSquare(direction, nb);
+	        		}
+	        		else if(caracter.target) {
+	        			var tmpTarget = caracter.target;
+	        			caracter.target = null;
+	        			caracter.nextSquare(tmpTarget.direction, tmpTarget.nb);
+	        		}
+        	});
 		}
-
-    	canvas.Timeline.new(caracter.el).to({
-	            x: delta.x
-	        },
-        	speed).call(function(){
-        		caracter.animation.stop();
-        		if(firstCall == 'x'){
-        			caracter.nextSquareY(delta, firstCall);
-        		}
-        	}
-        );
 
     },
-
-    nextSquareY: function(delta, firstCall){
-		
-		console.log(delta);
-        var caracter = this,
-    		map = this.scene.map
-    		speed = Math.abs(delta.y);
-
-		if(delta.y < 0) {
-
-    		caracter.animation.play("walkYback", "loop");
-			delta.y = caracter.el.y - Math.abs(delta.y);
-
-		}
-		else {
-
-    		caracter.animation.play("walkY", "loop");
-			delta.y = caracter.el.y + Math.abs(delta.y);
-
-		}
-
-    	canvas.Timeline.new(caracter.el).to({
-	            y: delta.y
-	        },
-        	speed).call(function(){
-        		caracter.animation.stop();
-        		if(firstCall == 'y'){
-        			caracter.nextSquareX(delta, firstCall);
-        		}
-        	}
-        );
-
-    },
-
 
 	initAnimation: function() {
         var animation = canvas.Animation.new({
