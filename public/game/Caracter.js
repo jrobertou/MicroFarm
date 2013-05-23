@@ -37,20 +37,20 @@ Class.create("Caracter", {
 			map = caracter.scene.map;
 		if(caracter.animation)
 			caracter.animation.stop();
-       //caracter.el.x = offsetX-(caracter.width/2);
-       //caracter.el.y = offsetY-(caracter.height/2);
+
        	var now =  map.coordonatesToSquare(caracter.el.x, caracter.el.y);
 
        	caracter.targetPosition = {x: squareX!=now.x?squareX:null, y: squareY!=now.y?squareY:null};
 
-       	var target = this.targetPosition;
+       	var target = caracter.targetPosition;
+
+       	console.log(caracter.targetPosition)
 
        	if(target.x || target.y){
 
-       		var deltaX = target.x - now.x,
-	       		deltaY = target.y - now.y;
+       		var deltaX = target.x?target.x - now.x:0,
+	       		deltaY = target.y?target.y - now.y:0;
 
-	       	console.log(deltaX+' : '+deltaY);
 
 	       	var delta = map.squareToCoordonates(deltaX, deltaY);
 
@@ -64,16 +64,15 @@ Class.create("Caracter", {
 	       	if(deltaX > deltaY){
 	       		if(target.y)
 	       			caracter.target = {direction: ydirection, nb: deltaY};
-	       		console.log('x ' + deltaX + JSON.stringify(caracter.target));
+
 	    		caracter.nextSquare(xdirection, deltaX);	       		
 	       	}
 	    	else{
 	    		if(target.x)
 	       			caracter.target = {direction: xdirection, nb: deltaX};
-	       		console.log('y ' + deltaY + JSON.stringify(caracter.target));
+
 	    		caracter.nextSquare(ydirection, deltaY);
 	    	}
-	       		
        	}	
     },
 
