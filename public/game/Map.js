@@ -52,16 +52,13 @@ Class.create("Map", {
 		return {x:tmpX, y:tmpY};
 	},
 
-
 	mouseMoveOnMap: function(e){
 		var map = e.data.map,
-			coord = map.coordonatesToSquare(e.offsetX, e.offsetY);
+			x = e.offsetX,
+			y = e.offsetY;
 
-		coord = map.squareToCoordonates(coord.x, coord.y);
-
-		$('.mouse').html(JSON.stringify(coord) + '<br/>' + map.hoverSquare.x +' : '+map.hoverSquare.y);
-		map.hoverSquare.x = coord.x;
-		map.hoverSquare.y = coord.y;
+		map.hoverSquare.x = x - Math.floor(x%map.squareWidth);
+		map.hoverSquare.y = y - Math.floor(y%map.squareHeight);
 	},
 
 	clickOnMap: function(e){
