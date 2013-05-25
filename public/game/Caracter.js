@@ -46,10 +46,10 @@ Class.create("Caracter", {
 
        	console.log(caracter.targetPosition)
 
-       	if(target.x || target.y){
+       	if(target.x != null || target.y != null){
 
-       		var deltaX = target.x?target.x - now.x:0,
-	       		deltaY = target.y?target.y - now.y:0;
+       		var deltaX = target.x != null?target.x - now.x:0,
+	       		deltaY = target.y != null?target.y - now.y:0;
 
 
 	       	var delta = map.squareToCoordonates(deltaX, deltaY);
@@ -62,13 +62,13 @@ Class.create("Caracter", {
 	       	caracter.target = null;
 
 	       	if(deltaX > deltaY){
-	       		if(target.y)
+	       		if(target.y != null)
 	       			caracter.target = {direction: ydirection, nb: deltaY};
 
 	    		caracter.nextSquare(xdirection, deltaX);	       		
 	       	}
 	    	else{
-	    		if(target.x)
+	    		if(target.x != null)
 	       			caracter.target = {direction: xdirection, nb: deltaX};
 
 	    		caracter.nextSquare(ydirection, deltaY);
