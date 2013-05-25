@@ -23,7 +23,7 @@ Class.create("Map", {
 
        	var tiled = canvas.Tiled.new();
 
-       	tiled.load(map.scene, map.el, '/maps/TestMap2.json');
+       	tiled.load(map.scene, map.el, '/maps/Map01.json');
     
 	    tiled.ready(function() {
 
