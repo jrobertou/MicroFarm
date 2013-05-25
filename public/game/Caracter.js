@@ -10,6 +10,8 @@ Class.create("Caracter", {
 	animation: null,
 	speedAnimation: 3,
 	target: null,
+	move:false,
+
 
 	initialize: function(stage, scene) {
 		this.stage = stage;
@@ -35,6 +37,7 @@ Class.create("Caracter", {
 	initMove: function(squareX, squareY) {
 		var caracter = this,
 			map = caracter.scene.map;
+		caracter.move = true;
 		if(caracter.animation)
 			caracter.animation.stop();
 
@@ -60,7 +63,7 @@ Class.create("Caracter", {
 	       	deltaX = Math.abs(deltaX);
 	       	deltaY = Math.abs(deltaY);
 	       	caracter.target = null;
-
+	       	
 	       	if(deltaX > deltaY){
 	       		if(target.y != null)
 	       			caracter.target = {direction: ydirection, nb: deltaY};
@@ -73,7 +76,9 @@ Class.create("Caracter", {
 
 	    		caracter.nextSquare(ydirection, deltaY);
 	    	}
-       	}	
+       	}
+       	else
+   			caracter.move = false;
     },
 
 
@@ -117,6 +122,8 @@ Class.create("Caracter", {
 	        			caracter.target = null;
 	        			caracter.nextSquare(tmpTarget.direction, tmpTarget.nb);
 	        		}
+		        		else
+		        			caracter.move = false;
         	});
 		}
 		else {
@@ -135,6 +142,8 @@ Class.create("Caracter", {
 	        			caracter.target = null;
 	        			caracter.nextSquare(tmpTarget.direction, tmpTarget.nb);
 	        		}
+	        			else
+		        			caracter.move = false;
         	});
 		}
 

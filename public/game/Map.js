@@ -59,7 +59,7 @@ Class.create("Map", {
 		var map = e.data.map,
 			coord = map.coordonatesToSquare(e.offsetX, e.offsetY);
 
-		if(map.squareCollection[coord.x+'-'+coord.y].canWalkOnIt){
+		if(!map.scene.mainCaracter.move && map.squareCollection[coord.x+'-'+coord.y].canWalkOnIt){
 			if(map.clickSquare)
 			map.clickSquare.remove();
 			map.clickSquare = map.newSquare(coord.x, coord.y, "green");
