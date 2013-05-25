@@ -39,17 +39,11 @@ Class.create("Map", {
 	},
 
 	coordonatesToSquare: function(x, y){
-		var map = this;
-		var tmpX = Math.floor(x/32),
-		  tmpY = Math.floor(y/32);
-		return {x:tmpX, y:tmpY};
+		return {x:Math.floor(x/32), y:Math.floor(y/32)};
 	},
 
-	squareToCoordonates: function(squreX, squreY){
-		var map = this;
-		var tmpX = squreX * 32,
-		  tmpY = squreY * 32;
-		return {x:tmpX, y:tmpY};
+	squareToCoordonates: function(x, y){
+		return {x:x*32, y:y*32};
 	},
 
 	mouseMoveOnMap: function(e){
