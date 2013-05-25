@@ -36,13 +36,12 @@ canvas.Scene.new({
     
   },
   render: function(stage) {
-
     stage.refresh();
   },
 
   mapLoad: function(e) {
     var stage = e.data.stage,
-      scene = e.data.scene;
+        scene = e.data.scene;
 
     scene.mainCaracter = canvas.Caracter.new(stage, scene);
     scene.events(stage, scene);
@@ -63,8 +62,8 @@ canvas.Scene.new({
        element: scene.map.el, 
        speed: 5,
        block: true,
-       width: 512,
-       height: 512
+       width: 960,
+       height: 480
     });
 
 

@@ -5,3 +5,10 @@ body {
 a {
   color: #00B7FF;
 }
+div#canvasBorder
+{
+	width: 960px;
+	height: 480px;
+	background: url('/img/border.png');
+	padding:10px;
+}
