@@ -31,6 +31,10 @@ Class.create("Map", {
 	        map.stage.append(map.el);
 	        $("#canvas_id").trigger("mapLoad");
 
+			map.hoverSquare = map.newSquare(0, 0, "#f3f3f3");
+			map.stage.append(map.hoverSquare);
+			map.hoverSquare.zIndex = 1005;
+
 	    });
 	},
 
@@ -53,12 +57,11 @@ Class.create("Map", {
 		var map = e.data.map,
 			coord = map.coordonatesToSquare(e.offsetX, e.offsetY);
 
-		$('.mouse').html(JSON.stringify(coord));
-		
-		if(map.hoverSquare)
-		map.hoverSquare.remove();
-		map.hoverSquare = map.newSquare(coord.x, coord.y, "#f3f3f3");
-		map.stage.append(map.hoverSquare);
+		coord = map.squareToCoordonates(coord.x, coord.y);
+
+		$('.mouse').html(JSON.stringify(coord) + '<br/>' + map.hoverSquare.x +' : '+map.hoverSquare.y);
+		map.hoverSquare.x = coord.x;
+		map.hoverSquare.y = coord.y;
 	},
 
 	clickOnMap: function(e){
