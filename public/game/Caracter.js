@@ -6,6 +6,7 @@ Class.create("Caracter", {
 	height: 48,
 	stage: null,
 	scene: null,
+	map: null,
 	tiled: null,
 	animation: null,
 	speedAnimation: 3,
@@ -20,20 +21,41 @@ Class.create("Caracter", {
 	},
 
 	render: function() {
+		this.map = this.scene.map;
 		this.el = this.scene.createElement();
-		this.el.width = this.width;
-		this.el.height = this.height;
+
 	    this.el.drawImage(this.name);
+	    this.initXposition();
+	    this.initYposition();
 	    this.stage.append(this.el);
 	   	this.stage.refresh();
 	   	this.initAnimation();
+	   	this.zIndex = 10;
 	    this.animation.play("walkInit", 'loop');
 	},
-	 /**
-		@doc tiled/
-		@method ready Calls the function when the layers are drawn
-		@param {Function} callback
-	 */
+
+	initXposition: function(){
+		this.el.x = this.map.xSquareToCoord(1);
+	},
+	initXpositionEnd: function(){
+		this.el.x = this.map.xSquareToCoord(29);
+	},
+
+	initYposition: function(){
+		this.el.y = this.map.ySquareToCoord(1);
+	},
+	initYpositionEnd: function(){
+		this.el.y = this.map.ySquareToCoord(11);
+	},
+
+	add: function() {
+	    this.stage.append(this.el);
+	},
+
+	remove: function() {
+	    this.el.remove();
+	},
+
 	initMove: function(squareX, squareY) {
 		var caracter = this,
 			map = caracter.scene.map;
@@ -112,18 +134,7 @@ Class.create("Caracter", {
 					y: caracter.el.y
 		        },
 	        	caracter.speedAnimation, Ease.linear).call(function(){
-	        		caracter.animation.stop();
-	        		--nb;
-	        		if(nb > 0){
-	        			caracter.nextSquare(direction, nb);
-	        		}
-	        		else if(caracter.target) {
-	        			var tmpTarget = caracter.target;
-	        			caracter.target = null;
-	        			caracter.nextSquare(tmpTarget.direction, tmpTarget.nb);
-	        		}
-		        		else
-		        			caracter.move = false;
+	        		caracter.callbackNexSquare(direction, nb);
         	});
 		}
 		else {
@@ -132,21 +143,26 @@ Class.create("Caracter", {
 					y: targetPosition
 		        },
 	        	caracter.speedAnimation, Ease.linear).call(function(){
-	        		caracter.animation.stop();
-	        		--nb;
-	        		if(nb > 0){
-	        			caracter.nextSquare(direction, nb);
-	        		}
-	        		else if(caracter.target) {
-	        			var tmpTarget = caracter.target;
-	        			caracter.target = null;
-	        			caracter.nextSquare(tmpTarget.direction, tmpTarget.nb);
-	        		}
-	        			else
-		        			caracter.move = false;
+	        		caracter.callbackNexSquare(direction, nb);
         	});
 		}
 
+    },
+
+    callbackNexSquare: function(direction, nb) {
+    	var caracter = this;
+    	caracter.animation.stop();
+    		--nb;
+    		if(nb > 0){
+    			caracter.nextSquare(direction, nb);
+    		}
+    		else if(caracter.target && !caracter.scene.map.isEndMapX(caracter.el.x) && !caracter.scene.map.isEndMapY(caracter.el.y)) {
+    			var tmpTarget = caracter.target;
+    			caracter.target = null;
+    			caracter.nextSquare(tmpTarget.direction, tmpTarget.nb);
+    		}
+    			else
+        			caracter.move = false;
     },
 
 	initAnimation: function() {

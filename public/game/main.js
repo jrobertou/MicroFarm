@@ -16,23 +16,23 @@ canvas.Scene.new({
     images: {
       CastleTown: '/img/CastleTown.png',
       ball: '/img/ball.png',
-      chara: '/img/chara.png'
+      chara: '/img/chara.png',
     }
   },
+  canvasEl: $("#canvas_id"),
   map: null,
   mainCaracter: null,
 
   events: function(stage, scene) {
-    $("#canvas_id").on('click', {map: scene.map}, scene.map.clickOnMap);
-    $('#canvas_id').mousemove({map:scene.map}, scene.map.mouseMoveOnMap);
-    
+    scene.canvasEl.on('click', {map: scene.map}, scene.map.clickOnMap);
+    scene.canvasEl.mousemove({map:scene.map}, scene.map.mouseMoveOnMap); 
   },
 
   ready: function(stage) {
     var scene = this;
 
     scene.map = canvas.Map.new(stage, scene);
-    $("#canvas_id").on("mapLoad", {stage:stage, scene: scene}, scene.mapLoad);
+    scene.canvasEl.on("mapLoad", {stage:stage, scene: scene}, scene.mapLoad);
     
   },
   render: function(stage) {
@@ -42,30 +42,12 @@ canvas.Scene.new({
   mapLoad: function(e) {
     var stage = e.data.stage,
         scene = e.data.scene;
-
-    scene.mainCaracter = canvas.Caracter.new(stage, scene);
-    scene.events(stage, scene);
-    scene.scrolling();
-  },
-  scrolling: function() {
-    var scene = this;
-    //Création du Scrolling avec la taille d'un Tile
-    this.scrolling = canvas.Scrolling.new(this, 32, 32);
-    
-     //On définit en fonction de quoi bouge la Camera
-    //Normalement le var mainCaracter = this.createElement(); doit déja êter fais
-    this.scrolling.setMainElement(scene.mainCaracter.el);
-    console.log("Fonction scrolling",this.scrolling);
-    //Ajout du Scroll à la Map
-    //Normalement le var map = this.createElement(); doit déja êter fais
-    this.scrolling.addScroll({
-       element: scene.map.el, 
-       speed: 5,
-       block: true,
-       width: 960,
-       height: 480
-    });
-
-
+    if(scene.mainCaracter == null) {
+      scene.mainCaracter = canvas.Caracter.new(stage, scene);
+      scene.events(stage, scene);
+    }
+    else {
+      scene.mainCaracter.add();
+    }
   }
 });

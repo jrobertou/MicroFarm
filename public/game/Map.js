@@ -1,6 +1,7 @@
 
 Class.create("Map", {
 	el: null,
+	tiled: null,
 	name: "map",
 	stage: null,
 	scene: null,
@@ -9,7 +10,12 @@ Class.create("Map", {
 	clickSquare: null,
 	squareWidth: 32,
 	squareHeight: 32,
-
+	currentMap: {x:0, y:0},
+	lastSquareOnMap: null,
+	maps: [
+		['/maps/Map01.json', '/maps/Map02.json'],
+		['/maps/Map03.json', '/maps/Map04.json']
+	],
 
 	initialize: function(stage, scene) {
 		this.stage = stage;
@@ -19,13 +25,20 @@ Class.create("Map", {
 
 	render: function() {
 		var map = this;
-		map.el = this.scene.createElement();
+		map.el = map.scene.createElement();
+       	map.tiled = canvas.Tiled.new();
+       	map.createMap();
+       	map.lastSquareOnMap = map.coordonatesToSquare(map.scene.canvasEl.width()-1, map.scene.canvasEl.height()-1);
+	},
 
-       	var tiled = canvas.Tiled.new();
+	createMap: function(){
+		var map = this,
+			mapsX = this.currentMap.x
+			mapsY = this.currentMap.y;
 
-       	tiled.load(map.scene, map.el, '/maps/Map01.json');
+		map.tiled.load(map.scene, map.el, map.maps[mapsX][mapsY]);
     
-	    tiled.ready(function() {
+	    map.tiled.ready(function() {
 
 	        map.squareCollection = this.squareCollection;
 	        map.stage.append(map.el);
@@ -33,13 +46,27 @@ Class.create("Map", {
 
 			map.hoverSquare = map.newSquare(0, 0, "#f3f3f3");
 			map.stage.append(map.hoverSquare);
-			map.hoverSquare.zIndex = 1005;
-
 	    });
+	},
+
+	xCoordToSquare: function(x){
+		return Math.floor(x/32);
+	},
+
+	yCoordToSquare: function(y){
+		return Math.floor(y/32);
 	},
 
 	coordonatesToSquare: function(x, y){
 		return {x:Math.floor(x/32), y:Math.floor(y/32)};
+	},
+
+	xSquareToCoord: function(x){
+		return Math.floor(x*32);
+	},
+
+	ySquareToCoord: function(y){
+		return Math.floor(y*32);
 	},
 
 	squareToCoordonates: function(x, y){
@@ -69,6 +96,61 @@ Class.create("Map", {
 				
 	},
 
+	isEndMapX: function(xValue) {
+		xValue = this.xCoordToSquare(xValue);
+		if(xValue == 0 || xValue == this.lastSquareOnMap.x) {
+			this.loadNextXMap(xValue);
+			return true;
+		}
+		else {
+			return false;
+		}
+	},
+
+	isEndMapY: function(yValue) {
+		yValue = this.yCoordToSquare(yValue);
+
+		if(yValue == 0 || yValue == this.lastSquareOnMap.y) {
+
+			return true;
+		}
+		else {
+			return false;
+		}
+	},
+
+	loadNextXMap: function(xValue){
+		var map = this,
+			nextMap = null,
+			previousMap = true;
+		if(xValue == 0) {
+			nextMap = map.maps[map.currentMap.x][map.currentMap.y-1]!= undefined ?true:false;
+			if(nextMap){
+				map.currentMap.y--;
+			}
+		}
+		else{
+			nextMap = map.maps[map.currentMap.x][map.currentMap.y+1]!= undefined ?true:false;
+			if(nextMap){
+				map.currentMap.y++;
+				previousMap = false;
+			}
+		}
+
+		if(nextMap) {
+			var mainCaracter = map.scene.mainCaracter;
+			mainCaracter.remove();
+			map.createMap();
+			if(previousMap)
+				mainCaracter.initXpositionEnd();
+			else
+				mainCaracter.initXposition();
+			mainCaracter.callbackNexSquare(null, 0);
+
+		}
+
+	},
+
 	newSquare: function(x, y, color){
 		var el = this.scene.createElement();
 		
@@ -82,8 +164,8 @@ Class.create("Map", {
 });
 var Map = {
 	Map: {
-		"new": function(stage, scene) {
-			return Class["new"]("Map", [stage, scene]);
+		"new": function(stage, scene, caracterePosition) {
+			return Class["new"]("Map", [stage, scene, caracterePosition]);
 		}
 	}
 };
