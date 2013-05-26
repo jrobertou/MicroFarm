@@ -25,8 +25,6 @@ Class.create("Map", {
 
 	render: function() {
 		var map = this;
-		map.el = map.scene.createElement();
-       	map.tiled = canvas.Tiled.new();
        	map.createMap();
        	map.lastSquareOnMap = map.coordonatesToSquare(map.scene.canvasEl.width()-1, map.scene.canvasEl.height()-1);
 	},
@@ -35,6 +33,12 @@ Class.create("Map", {
 		var map = this,
 			mapsX = this.currentMap.x
 			mapsY = this.currentMap.y;
+
+		if(map.tiled)
+			map.el.remove();
+
+		map.el = map.scene.createElement();
+       	map.tiled = canvas.Tiled.new();
 
 		map.tiled.load(map.scene, map.el, map.maps[mapsX][mapsY]);
     
