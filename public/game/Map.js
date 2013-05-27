@@ -34,8 +34,10 @@ Class.create("Map", {
 			mapsX = this.currentMap.x
 			mapsY = this.currentMap.y;
 
-		if(map.tiled)
+		if(map.tiled){
 			map.el.remove();
+			map.tiled = null;
+		}
 
 		map.el = map.scene.createElement();
        	map.tiled = canvas.Tiled.new();
@@ -103,8 +105,7 @@ Class.create("Map", {
 	isEndMapX: function(xValue) {
 		xValue = this.xCoordToSquare(xValue);
 		if(xValue == 0 || xValue == this.lastSquareOnMap.x) {
-			this.loadNextXMap(xValue);
-			return true;
+			return this.loadNextMap(xValue, true);
 		}
 		else {
 			return false;
@@ -116,42 +117,68 @@ Class.create("Map", {
 
 		if(yValue == 0 || yValue == this.lastSquareOnMap.y) {
 
-			return true;
+			return this.loadNextMap(yValue, false);
 		}
 		else {
 			return false;
 		}
 	},
 
-	loadNextXMap: function(xValue){
+	loadNextMap: function(value, isX){
 		var map = this,
 			nextMap = null,
 			previousMap = true;
-		if(xValue == 0) {
-			nextMap = map.maps[map.currentMap.x][map.currentMap.y-1]!= undefined ?true:false;
+		if(value == 0) {
+			if(isX)
+				nextMap = map.maps[map.currentMap.x][map.currentMap.y-1];
+			else
+				nextMap = map.maps[map.currentMap.x-1] && map.maps[map.currentMap.x-1][map.currentMap.y];
+
 			if(nextMap){
-				map.currentMap.y--;
+				if(isX)
+					map.currentMap.y--;
+				else
+					map.currentMap.x--;
 			}
+			else
+				return false;
 		}
 		else{
-			nextMap = map.maps[map.currentMap.x][map.currentMap.y+1]!= undefined ?true:false;
+			if(isX)
+				nextMap = map.maps[map.currentMap.x][map.currentMap.y+1];
+			else
+				nextMap = map.maps[map.currentMap.x+1] && map.maps[map.currentMap.x+1][map.currentMap.y];
+
+
 			if(nextMap){
-				map.currentMap.y++;
+				if(isX)
+					map.currentMap.y++;
+				else
+					map.currentMap.x++;
+
 				previousMap = false;
 			}
+			else
+				return false;
 		}
 
 		if(nextMap) {
 			var mainCaracter = map.scene.mainCaracter;
-			mainCaracter.remove();
 			map.createMap();
-			if(previousMap)
-				mainCaracter.initXpositionEnd();
-			else
-				mainCaracter.initXposition();
-			mainCaracter.callbackNexSquare(null, 0);
 
+			if(previousMap)
+				mainCaracter.initPositionEnd(isX);
+			else
+				mainCaracter.initPosition(isX);
+
+			mainCaracter.callbackNexSquare(null, 0, 
+				isX? !mainCaracter.scene.map.isEndMapY(mainCaracter.el.y) : !mainCaracter.scene.map.isEndMapY(mainCaracter.el.x)
+			);
+
+			return true;
 		}
+		else
+			return false;
 
 	},
 

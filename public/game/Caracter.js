@@ -25,8 +25,8 @@ Class.create("Caracter", {
 		this.el = this.scene.createElement();
 
 	    this.el.drawImage(this.name);
-	    this.initXposition();
-	    this.initYposition();
+	    this.initPosition(true);
+	    this.initPosition(false);
 	    this.stage.append(this.el);
 	   	this.stage.refresh();
 	   	this.initAnimation();
@@ -34,18 +34,17 @@ Class.create("Caracter", {
 	    this.animation.play("walkInit", 'loop');
 	},
 
-	initXposition: function(){
-		this.el.x = this.map.xSquareToCoord(1);
+	initPosition: function(isX){
+		if(isX)
+			this.el.x = this.map.xSquareToCoord(1);
+		else
+			this.el.y = this.map.xSquareToCoord(1);
 	},
-	initXpositionEnd: function(){
-		this.el.x = this.map.xSquareToCoord(29);
-	},
-
-	initYposition: function(){
-		this.el.y = this.map.ySquareToCoord(1);
-	},
-	initYpositionEnd: function(){
-		this.el.y = this.map.ySquareToCoord(11);
+	initPositionEnd: function(isX){
+		if(isX)
+			this.el.x = this.map.xSquareToCoord(28);
+		else
+			this.el.y = this.map.ySquareToCoord(11);
 	},
 
 	add: function() {
@@ -134,7 +133,7 @@ Class.create("Caracter", {
 					y: caracter.el.y
 		        },
 	        	caracter.speedAnimation, Ease.linear).call(function(){
-	        		caracter.callbackNexSquare(direction, nb);
+	        		caracter.callbackNexSquare(direction, nb, !caracter.scene.map.isEndMapX(caracter.el.x) );
         	});
 		}
 		else {
@@ -143,20 +142,20 @@ Class.create("Caracter", {
 					y: targetPosition
 		        },
 	        	caracter.speedAnimation, Ease.linear).call(function(){
-	        		caracter.callbackNexSquare(direction, nb);
+	        		caracter.callbackNexSquare(direction, nb, !caracter.scene.map.isEndMapY(caracter.el.y));
         	});
 		}
 
     },
 
-    callbackNexSquare: function(direction, nb) {
+    callbackNexSquare: function(direction, nb, mapIsNotEnd) {
     	var caracter = this;
     	caracter.animation.stop();
     		--nb;
     		if(nb > 0){
     			caracter.nextSquare(direction, nb);
     		}
-    		else if(caracter.target && !caracter.scene.map.isEndMapX(caracter.el.x) && !caracter.scene.map.isEndMapY(caracter.el.y)) {
+    		else if(caracter.target && mapIsNotEnd) {
     			var tmpTarget = caracter.target;
     			caracter.target = null;
     			caracter.nextSquare(tmpTarget.direction, tmpTarget.nb);
