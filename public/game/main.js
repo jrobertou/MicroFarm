@@ -3,6 +3,7 @@ var canvas = CE.defines('canvas_id').
     extend(Spritesheet).
     extend(Tiled).
     extend(Input).
+    extend(Sockets).
     extend(Caracter).
     extend(Map).
     extend(Animation).
@@ -40,14 +41,19 @@ canvas.Scene.new({
   },
 
   mapLoad: function(e) {
+    console.log('map load')
     var stage = e.data.stage,
         scene = e.data.scene;
-    if(scene.mainCaracter == null) {
+    if(scene.mainCaracter === null) {
       scene.mainCaracter = canvas.Caracter.new(stage, scene);
       scene.events(stage, scene);
     }
     else {
-      scene.mainCaracter.add();
+      var tmpCarac = scene.mainCaracter;
+      scene.mainCaracter.remove();
+
+      scene.mainCaracter = canvas.Caracter.new(stage, scene, tmpCarac);
+      scene.events(stage, scene);
     }
   }
 });

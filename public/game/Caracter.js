@@ -1,5 +1,5 @@
-
 Class.create("Caracter", {
+	id: 0,
 	el: null,
 	name: "chara",
 	width: 32,
@@ -12,26 +12,39 @@ Class.create("Caracter", {
 	speedAnimation: 3,
 	target: null,
 	move:false,
+	sockets: null,
 
 
-	initialize: function(stage, scene) {
+	initialize: function(stage, scene, oldEl) {
 		this.stage = stage;
 		this.scene = scene;
+		this.oldEl = oldEl?oldEl:null;
 		this.render();
 	},
 
 	render: function() {
 		this.map = this.scene.map;
-		this.el = this.scene.createElement();
 
-	    this.el.drawImage(this.name);
-	    this.initPosition(true);
-	    this.initPosition(false);
+		if(!this.oldEl) {
+			this.el = this.scene.createElement();
+		    this.el.drawImage(this.name);
+		    this.initPosition(true);
+		    this.initPosition(false);
+		    this.sockets = canvas.Sockets.new(this);
+		}
+		else {
+			this.el = this.oldEl.el;
+			this.animation = this.oldEl.animation;
+		}
+		
+
 	    this.stage.append(this.el);
 	   	this.stage.refresh();
-	   	this.initAnimation();
-	   	this.zIndex = 10;
-	    this.animation.play("walkInit", 'loop');
+
+		if(!this.oldEl) {
+		   	this.initAnimation();
+		    this.animation.play("walkInit", 'loop');
+		}
 	},
 
 	initPosition: function(isX){
@@ -219,8 +232,8 @@ Class.create("Caracter", {
 });
 var Caracter = {
 	Caracter: {
-		"new": function(stage, scene) {
-			return Class["new"]("Caracter", [stage, scene]);
+		"new": function(stage, scene, oldEl) {
+			return Class["new"]("Caracter", [stage, scene, oldEl]);
 		}
 	}
 };

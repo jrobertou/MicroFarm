@@ -5,9 +5,12 @@
 
 var express = require('express'),
     http = require('http'),
-    path = require('path');
+    path = require('path'),
+    io = require('socket.io');
 
 var app = express();
+var server = http.createServer(app)
+io.listen(server);
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3030);
@@ -30,7 +33,10 @@ app.configure('development', function(){
 var main = require('./routes/main.js'),
   log = require('./routes/log.js'),
   profil = require('./routes/profil.js'),
-  game = require('./routes/game.js');
+  game = require('./routes/game.js'),
+  sockets = require('./modules/sockets.js');
+
+sockets.listenning();
 
 app.get('/', main.get);
 app.get('/profil', profil.get);
