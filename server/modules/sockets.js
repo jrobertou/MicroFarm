@@ -1,6 +1,6 @@
 var Caracteres = [];
 
-exports.listenning = function()
+exports.listenning = function(io)
 {
 	io.sockets.on('connection', function (socket) {
 		var idUser = socket.id;
