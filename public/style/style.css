@@ -12,3 +12,99 @@ div#canvasBorder
 	background: url('/img/border.png');
 	padding:10px;
 }
+div#canvasPanel
+{
+	height: 32px;
+	width: 960px;
+	display: inline-block;
+	background: url('/img/barsheet.png') no-repeat 0px 0px;
+	margin-top: -4px;
+}
+div#PanelLife
+{
+	height: 32px;
+	width:  200px;
+	display: inline-block;
+	background: url('/img/barsheet.png') no-repeat 0px -32px;
+	margin: -8px 0px 0px -20px;
+}
+div#PanelLifePercent
+{
+	height: 18px;
+	width: 180px;
+	display: inline-block;
+	background-color: green;
+	margin: 10px 0px 0px 20px;
+}
+div#PanelButton1
+{	
+	height: 32px;
+	width: 28px;
+	display: inline-block;
+	margin: 0px 0px 0px 10px;
+}
+div#PanelButton2
+{
+	height: 32px;
+	width: 30px;
+	display: inline-block;
+	margin: 0px 0px 0px 2px;
+}
+div#PanelOr
+{
+	height: 32px;
+	width: 406px;
+	display: inline-block;
+	margin: 0px 0px 0px 2px;
+}
+div#PanelPlayer
+{
+	height: 32px;
+	width: 160px;
+	display: inline-block;
+	margin: -10px 0px 0px 2px;
+}
+div#PanelButton3
+{
+	height: 32px;
+	width: 28px;
+	display: inline-block;
+	margin: 0px 0px 0px 2px;
+}
+div#PanelButton4
+{
+	height: 32px;
+	width: 28px;
+	display: inline-block;
+	margin: 0px 0px 0px 2px;
+}
+div#PanelButton5
+{
+	height: 32px;
+	width: 28px;
+	display: inline-block;
+	margin: 0px 0px 0px 2px;
+}
+div#PanelButton6
+{
+
+}
+p#TextGold{
+	color: white;
+	margin: 0px 0px 0px 50px;
+	display: inline-block;
+}
+div#PanelBle
+{
+	height: 32px;
+	width:  28px;
+	display: inline-block;
+	background: url('/img/barsheet.png') no-repeat -576px -30px;
+}
+div#PanelBle:hover
+{
+	height: 32px;
+	width:  28px;
+	display: inline-block;
+	background: url('/img/barsheet.png') no-repeat -344px -30px;	
+}
