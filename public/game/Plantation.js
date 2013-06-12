@@ -26,9 +26,9 @@ Class.create("Plantation", {
 	    this.el.drawImage(this.name);
 	    this.initPosition(true);
 	    this.initPosition(false);
-	    this.stage.append(this.el);
 	   	this.stage.refresh();
 	   	this.initAnimation();
+	   	this.stage.append(this.el);
 	    
 	},
 	initPosition: function(isX){

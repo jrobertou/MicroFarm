@@ -38,13 +38,14 @@ Class.create("Caracter", {
 		}
 		
 
-	    this.stage.append(this.el);
+	    
 	   	this.stage.refresh();
 
 		if(!this.oldEl) {
 		   	this.initAnimation();
 		    this.animation.play("walkInit", 'loop');
 		}
+		this.stage.append(this.el);
 	},
 
 	initPosition: function(isX){
