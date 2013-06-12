@@ -8,6 +8,7 @@ Class.create("Map", {
 	squareCollection: null,
 	hoverSquare: null,
 	clickSquare: null,
+	isBuildWheat: false,
 	squareWidth: 32,
 	squareHeight: 32,
 	currentMap: {x:0, y:0},
@@ -91,15 +92,25 @@ Class.create("Map", {
 	clickOnMap: function(e){
 		var map = e.data.map,
 			coord = map.coordonatesToSquare(e.offsetX, e.offsetY);
-
-		if(!map.scene.mainCaracter.move && map.squareCollection[coord.x+'-'+coord.y].canWalkOnIt){
-			if(map.clickSquare)
-			map.clickSquare.remove();
-			map.clickSquare = map.newSquare(coord.x, coord.y, "green");
-			map.stage.append(map.clickSquare);
-    		map.scene.mainCaracter.initMove(coord.x, coord.y);
+		if(map.isBuildWheat)
+		{
+			map.isBuildWheat = false;
+			$("#canvas_id").trigger("buildWheatClick",[map.stage, map.scene, {x:coord.x, y:coord.y}]);
 		}
+		else
+			if(!map.scene.mainCaracter.move && map.squareCollection[coord.x+'-'+coord.y].canWalkOnIt){
+				if(map.clickSquare)
+				map.clickSquare.remove();
+				map.clickSquare = map.newSquare(coord.x, coord.y, "green");
+				map.stage.append(map.clickSquare);
+	    		map.scene.mainCaracter.initMove(coord.x, coord.y);
+			}
 				
+	},
+
+	buildWheat:function(e){
+		var map = e.data.map;
+		map.isBuildWheat = true;
 	},
 
 	isEndMapX: function(xValue) {
