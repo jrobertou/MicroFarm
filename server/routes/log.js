@@ -1,5 +1,6 @@
 var accountManager = require('../modules/account.js'),
-  callbackMessage = require('../helpers/callbackMessage.js');
+  callbackMessage = require('../helpers/callbackMessage.js'),
+  socketio = require('../modules/sockets.js');
 
 var validMessage = callbackMessage.validMessage,
   errorMessage = callbackMessage.errorMessage;
@@ -40,6 +41,7 @@ exports.login = function (req, res)
       var user = response;
       user.pass = pass;
       res.cookie('user', user, { maxAge: 900000 });
+      socketio.setUser(user);
       req.session.user = user;
       res.redirect("/profil");
       var feedback = null;

@@ -3,11 +3,13 @@
  * Module dependencies.
  */
 
-var express = require('express'),
-    http = require('http'),
-    path = require('path');
+var express = require('express');
 
-var app = express();
+var app = express()
+  , http = require('http')
+  , path = require('path')
+  , server = http.createServer(app)
+  , io = require('socket.io').listen(server);
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3030);
@@ -27,12 +29,6 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-var server = http.createServer(app);
-var io = require('socket.io').listen(app);
-
-server.listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
-});
 
 
 var main = require('./routes/main.js'),
@@ -41,7 +37,7 @@ var main = require('./routes/main.js'),
   game = require('./routes/game.js'),
   socketio = require('./modules/sockets.js');
 
-socketio.listenning(io);
+socketio.listen(io);
 
 app.get('/', main.get);
 app.get('/profil', profil.get);
@@ -49,3 +45,7 @@ app.post('/signup', log.signup);
 app.post("/login", log.login);
 app.get('/logout', log.logout);
 app.get('/game', game.get);
+
+server.listen(app.get('port'), function(){
+  console.log("Express server listening on port " + app.get('port'));
+});

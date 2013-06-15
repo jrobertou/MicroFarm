@@ -1,23 +1,19 @@
-
 Class.create("Sockets", {
-  caractere: null,
 
-  initialize: function(caractere) {
-    this.caractere = caractere;
-    console.log("sockets init");
-    this.render();
+  initialize: function(gameSocket) {
+    
+    
   },
 
   render: function() {
     
-
   },
-
 });
+
 var Sockets = {
   Sockets: {
-    "new": function(caractere) {
-      return Class["new"]("Sockets", [caractere]);
+    "new": function(gameSocket) {
+      return Class["new"]("Sockets", [gameSocket]);
     }
   }
 };

@@ -26,6 +26,8 @@ canvas.Scene.new({
   canvasEl: $("#canvas_id"),
   map: null,
   mainCaracter: null,
+  gameSockets: null,
+  socket: null,
 
   events: function(stage, scene) {
     scene.canvasEl.on('click', {map: scene.map}, scene.map.clickOnMap);
@@ -37,10 +39,7 @@ canvas.Scene.new({
   },
 
   ready: function(stage) {
-    var scene = this;
-
-    scene.map = canvas.Map.new(stage, scene);
-    scene.canvasEl.on("mapLoad", {stage:stage, scene: scene}, scene.mapLoad);
+    this.socketInit();
     
   },
   render: function(stage) {
@@ -62,5 +61,12 @@ canvas.Scene.new({
       scene.mainCaracter = canvas.Caracter.new(stage, scene, tmpCarac);
       scene.events(stage, scene);
     }
-  }
+  },
+
+  socketInit: function(){
+
+    socket.on('youData', function (data) {
+      console.log(data);
+    });
+  },
 });

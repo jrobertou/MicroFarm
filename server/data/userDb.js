@@ -5,7 +5,7 @@ var moment 		= require('moment');
 
 var dbPort 		= 27017;
 var dbHost 		= 'localhost';
-var dbName 		= 'simple-login';
+var dbName 		= 'MicroFarm';
 
 /* establish the database connection */
 
