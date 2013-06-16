@@ -36,7 +36,7 @@ canvas.Scene.new({
     scene.canvasEl.on('click', {map: scene.map}, scene.map.clickOnMap);
     scene.canvasEl.mousemove({map:scene.map}, scene.map.mouseMoveOnMap); 
     $("#PanelBle").on("click", {map: scene.map}, scene.map.buildWheat);
-    $("#PanelBuilding").on("click", {map: scene.map}, scene.map.buildBuilding);
+    $("#PanelBuilding").on("click  ", {map: scene.map}, scene.map.buildBuilding);
     scene.canvasEl.on("buildWheatClick", canvas.Plantation.new);
     scene.canvasEl.on("BuildBuildingClick", canvas.Building.new);
   },

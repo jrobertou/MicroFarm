@@ -37,7 +37,6 @@ Class.create("Caracter", {
 		    this.gold = this.oldEl.gold;
 		   	this.initAnimation();
 		    this.animation.play("walkInit", 'loop');
-   			scene.events(stage, scene);
    			this.socket = canvas.Sockets.new(stage, scene, this.name);
 		}
 		else {

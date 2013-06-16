@@ -16,6 +16,7 @@ Class.create("Building", {
 		this.stage = stage;
 		this.scene = scene;
 		this.position = position; 
+
 		this.render();
 	},
 
@@ -27,8 +28,20 @@ Class.create("Building", {
 	    this.initPosition(true);
 	    this.initPosition(false);
 	   	this.stage.refresh();
-	   	this.initAnimation();
-	   	this.stage.append(this.el);
+	   	this.initAnimation();		
+	   	for (var x=0;x<5;x++)
+		{ 
+			for (var y=0;y<8;y++)
+			{ 
+				if((this.el.x / 32 + x) > 29 || ((this.el.y / 32 + y) > 14) || ((this.el.x / 32 + x) < 0) || ((this.el.y / 32 + y) < 0) || ((this.el.x / 32 + x) == this.scene.mainCaracter.el.x / 32) && ((this.el.y / 32 + y) == this.scene.mainCaracter.el.y / 32) || this.map.squareCollection[(this.el.x / 32 + x)+'-'+(this.el.y / 32 + y)].canWalkOnIt == false)
+				{
+					alert('Emplacement invalide.');
+					return;
+				}	
+				this.map.squareCollection[(this.el.x / 32 + x)+'-'+(this.el.y / 32 + y)].canWalkOnIt = false;
+			}
+		}
+		this.stage.append(this.el);
  	   	this.scene.mainCaracter.el.zIndex(this.el.zIndex()+1);
 	},
 	initPosition: function(isX){

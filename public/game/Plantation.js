@@ -28,6 +28,12 @@ Class.create("Plantation", {
 	    this.initPosition(false);
 	   	this.stage.refresh();
 	   	this.initAnimation();
+	   	if((this.scene.mainCaracter.el.x / 32 == this.position.x) && (this.scene.mainCaracter.el.y / 32 == this.position.y) || (this.scene.mainCaracter.el.x / 32 == this.position.x) && ((this.scene.mainCaracter.el.y / 32) + 1 == this.position.y) ||  this.map.squareCollection[this.position.x+'-'+this.position.y].canWalkOnIt == false)
+   		{
+			alert('Emplacement invalide.');
+			return;
+		}	
+	   	this.map.squareCollection[this.position.x+'-'+this.position.y].canWalkOnIt = false;
 	   	this.stage.append(this.el);
 	   	this.scene.mainCaracter.el.zIndex(this.el.zIndex()+1);
 	},
