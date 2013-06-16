@@ -72,8 +72,8 @@ Class.create("Caracter", {
 	},
 
 	getSquarePosition: function() {
-		return coordonatesToSquare(thsi.el.x, this.el.y);
-	}
+		return this.map.coordonatesToSquare(this.el.x, this.el.y);
+	},
 
 	add: function() {
 	    this.stage.append(this.el);

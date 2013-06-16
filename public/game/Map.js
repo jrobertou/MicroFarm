@@ -14,7 +14,6 @@ Class.create("Map", {
 	squareHeight: 32,
 	currentMap: {x:0, y:0},
 	lastSquareOnMap: null,
-	plants: null,
 	maps: [
 		['/maps/Map01.json', '/maps/Map02.json','/maps/Map03.json'],
 		['/maps/Map04.json', '/maps/Map05.json','/maps/Map06.json'],
