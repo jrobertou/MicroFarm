@@ -14,7 +14,7 @@
 
   },
   "readmeFilename": "README.md",
-  "description": "-Farm =====",
+  "description": "-Micro Farm",
   "main": "server/app.js",
   "devDependencies": {},
   "repository": {
