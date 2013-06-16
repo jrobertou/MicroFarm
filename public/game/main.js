@@ -6,6 +6,7 @@ var canvas = CE.defines('canvas_id').
     extend(Sockets).
     extend(Caracter).
     extend(OtherPlayers).
+    extend(OthersObject).
     extend(Map).
     extend(Animation).
     extend(Plantation).
@@ -31,14 +32,15 @@ canvas.Scene.new({
   socket: null,
   username: document.cookie.split("=")[1],
   otherPlayers: null,
+  otherObjects: null,
 
   events: function(stage, scene) {
     scene.canvasEl.on('click', {map: scene.map}, scene.map.clickOnMap);
     scene.canvasEl.mousemove({map:scene.map}, scene.map.mouseMoveOnMap); 
     $("#PanelBle").on("click", {map: scene.map}, scene.map.buildWheat);
     $("#PanelBuilding").on("click  ", {map: scene.map}, scene.map.buildBuilding);
-    scene.canvasEl.on("buildWheatClick", canvas.Plantation.new);
-    scene.canvasEl.on("BuildBuildingClick", canvas.Building.new);
+    scene.canvasEl.on("buildWheatClick", {stage: scene.stage, scene: scene , object : scene.otherObjects} ,scene.otherObjects.addWheat);
+    scene.canvasEl.on("BuildBuildingClick", {stage: scene.stage, scene: scene , object : scene.otherObjects}  , scene.otherObjects.addBuilding);
   },
 
   ready: function(stage) {
@@ -46,6 +48,7 @@ canvas.Scene.new({
     this.socketInit();
     this.stage = stage;
     this.otherPlayers = canvas.OtherPlayers.new(stage, scene);
+    scene.otherObjects = canvas.OthersObject.new(stage, scene);
     
   },
   render: function(stage) {
@@ -60,6 +63,7 @@ canvas.Scene.new({
     scene.map = canvas.Map.new(stage, scene, param.me.map);
     scene.canvasEl.on("mapLoad", {stage:stage, scene: scene}, scene.mapLoad);
     scene.mainCaracter = param.me;
+    scene.events(stage, scene);
   },
 
   mapLoad: function(e) {
@@ -70,7 +74,7 @@ canvas.Scene.new({
     var tmpCarac = scene.mainCaracter;
 
     scene.mainCaracter = canvas.Caracter.new(stage, scene, tmpCarac);
-    scene.events(stage, scene);
+    scene.otherObjects.reinitialize();
     scene.otherPlayers.reinitialize();
     scene.otherPlayers.addOthers();
     

@@ -107,13 +107,13 @@ Class.create("Map", {
 		if(map.isBuildWheat)
 		{
 			map.isBuildWheat = false;
-			$("#canvas_id").trigger("buildWheatClick",[map.stage, map.scene, {x:coord.x, y:coord.y}]);
+			$("#canvas_id").trigger("buildWheatClick",[{x:coord.x, y:coord.y}]);
 		}
 		else
 			if(map.isBuildBuilding)
 			{
 				map.isBuildBuilding = false;
-				$("#canvas_id").trigger("BuildBuildingClick",[map.stage, map.scene, {x:coord.x, y:coord.y}]);
+				$("#canvas_id").trigger("BuildBuildingClick",[{x:coord.x, y:coord.y}]);
 			}
 		else
 			if(!map.scene.mainCaracter.move && map.squareCollection[coord.x+'-'+coord.y].canWalkOnIt){
