@@ -8,6 +8,7 @@ exports.listen = function(io)
 	  socket.on('iamanewboy', function (data) {
 	  		var callback = function(success, dataReturn) {
 	  			socket.emit('welcome', dataReturn);
+	  			socket.broadcast.emit('newOtherPlayers', dataReturn);
 	  		};
 	
 	  	gameManager.findCharacter(data.username, callback);
@@ -15,10 +16,11 @@ exports.listen = function(io)
 
     socket.on('move', function (data) {
 	  		var callback = function(success, dataReturn) {
-	  			socket.emit('welcome', dataReturn);
+	  			if(success)
+	  				socket.broadcast.emit('move', { name: data.name, map: data.map, position: data.position});
 	  		};
 	
-	  	gameManager.findCharacter(data.username, callback);
+	  	gameManager.changeCharacterPosition(data.username, data.map, data.position, callback);
     });
 
 	});

@@ -9,3 +9,8 @@ exports.findCharacter = function(username, callback)
 {
 	characterDb.find(username, callback);		
 };
+
+exports.changeCharacterPosition = function(username, map, position, callback)
+{
+	characterDb.changePosition(username, map, position, callback);		
+};

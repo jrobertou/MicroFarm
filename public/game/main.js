@@ -5,6 +5,7 @@ var canvas = CE.defines('canvas_id').
     extend(Input).
     extend(Sockets).
     extend(Caracter).
+    extend(OtherPlayers).
     extend(Map).
     extend(Animation).
     extend(Plantation).
@@ -29,6 +30,7 @@ canvas.Scene.new({
   gameSockets: null,
   socket: null,
   username: document.cookie.split("=")[1],
+  otherPlayers: null,
 
   events: function(stage, scene) {
     scene.canvasEl.on('click', {map: scene.map}, scene.map.clickOnMap);
@@ -42,6 +44,7 @@ canvas.Scene.new({
   ready: function(stage) {
     this.socketInit();
     this.stage = stage;
+    this.otherPlayers = canvas.OtherPlayers.new(stage, this);
     
   },
   render: function(stage) {
@@ -75,6 +78,15 @@ canvas.Scene.new({
     socket.on('welcome', function (data) {
       game.initMap(data);
     });
+
     socket.emit('iamanewboy', {username: game.username});
+
+    socket.on('newOtherPlayers', function (data) {
+      game.otherPlayers.add(data.name);
+    });
+
+    socket.on('move', function (data) {
+      game.otherPlayers.get(data.name).initMove(data.position.x, data.position.y);
+    });
   },
 });

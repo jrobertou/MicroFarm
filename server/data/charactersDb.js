@@ -42,8 +42,6 @@ exports.add = function(username, callback)
 exports.find = function(username, callback)
 {
 	characters.findOne({name: username}, function(error, obj) {
-		console.log('RESULTAT DE LA REQUETE : ');
-		console.log(obj);
 		if(obj){
 			if(obj.name === username){
 				callback(true, obj);
@@ -54,4 +52,16 @@ exports.find = function(username, callback)
 			callback(false, error);
 		}
 	});
+}
+
+exports.changePosition = function(name, map, position, callback)
+{
+	characters.findAndModify({name: name}, [['_id','asc']], {$set: {map: map, position: position}}, {},
+        function(err, object) {
+            if (err){
+                callback(false, object);
+            }else{
+                callback(true, object);
+            }
+        });
 }
