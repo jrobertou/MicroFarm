@@ -21,9 +21,10 @@ Class.create("Map", {
 		['/maps/Map07.json', '/maps/Map08.json','/maps/Map09.json']
 	],
 
-	initialize: function(stage, scene) {
+	initialize: function(stage, scene, stringPosition) {
 		this.stage = stage;
 		this.scene = scene;
+		this.currentMap = this.stringCoorToCoordonates(stringPosition);
 		this.render();
 	},
 
@@ -81,6 +82,15 @@ Class.create("Map", {
 
 	squareToCoordonates: function(x, y){
 		return {x:x*32, y:y*32};
+	},
+
+	coordonatesToString: function(){
+		return this.currentMap.x+':'+this.currentMap.y;
+	},
+
+	stringCoorToCoordonates: function(position){
+    	position = position.split(':');
+		return {x: parseInt(position[0]), y: parseInt(position[1])};
 	},
 
 	mouseMoveOnMap: function(e){
@@ -219,8 +229,8 @@ Class.create("Map", {
 });
 var Map = {
 	Map: {
-		"new": function(stage, scene, caracterePosition) {
-			return Class["new"]("Map", [stage, scene, caracterePosition]);
+		"new": function(stage, scene, stringPosition) {
+			return Class["new"]("Map", [stage, scene, stringPosition]);
 		}
 	}
 };

@@ -28,6 +28,7 @@ canvas.Scene.new({
   mainCaracter: null,
   gameSockets: null,
   socket: null,
+  username: document.cookie.split("=")[1],
 
   events: function(stage, scene) {
     scene.canvasEl.on('click', {map: scene.map}, scene.map.clickOnMap);
@@ -40,33 +41,40 @@ canvas.Scene.new({
 
   ready: function(stage) {
     this.socketInit();
+    this.stage = stage;
     
   },
   render: function(stage) {
     stage.refresh();
   },
 
+  initMap: function(param) {
+    var stage = this.stage,
+        scene = this;
+
+    scene.map = canvas.Map.new(stage, scene, param.map);
+    scene.canvasEl.on("mapLoad", {stage:stage, scene: scene}, scene.mapLoad);
+    scene.mainCaracter = param;
+  },
+
   mapLoad: function(e) {
-    console.log('map load')
+    console.log('map load');
     var stage = e.data.stage,
         scene = e.data.scene;
-    if(scene.mainCaracter === null) {
-      scene.mainCaracter = canvas.Caracter.new(stage, scene);
-      scene.events(stage, scene);
-    }
-    else {
-      var tmpCarac = scene.mainCaracter;
-      scene.mainCaracter.remove();
 
-      scene.mainCaracter = canvas.Caracter.new(stage, scene, tmpCarac);
-      scene.events(stage, scene);
-    }
+    var tmpCarac = scene.mainCaracter;
+
+    scene.mainCaracter = canvas.Caracter.new(stage, scene, tmpCarac);
+    scene.events(stage, scene);
+    
   },
 
   socketInit: function(){
+    var game = this;
 
-    socket.on('youData', function (data) {
-      console.log(data);
+    socket.on('welcome', function (data) {
+      game.initMap(data);
     });
+    socket.emit('iamanewboy', {username: game.username});
   },
 });

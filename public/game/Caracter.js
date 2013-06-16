@@ -2,6 +2,7 @@ Class.create("Caracter", {
 	id: 0,
 	el: null,
 	name: "chara",
+	imageName: "chara",
 	width: 32,
 	height: 48,
 	stage: null,
@@ -18,40 +19,51 @@ Class.create("Caracter", {
 	initialize: function(stage, scene, oldEl) {
 		this.stage = stage;
 		this.scene = scene;
-		this.oldEl = oldEl?oldEl:null;
+		this.oldEl = oldEl;
+		this.map = this.scene.map;
 		this.render();
 	},
 
 	render: function() {
-		this.map = this.scene.map;
-
-		if(!this.oldEl) {
+		var stage = this.stage,
+			scene = this.scene;
+		if(!this.oldEl.el) {
+			this.name = this.oldEl.name;
+			this.level = this.oldEl.level;
 			this.el = this.scene.createElement();
-		    this.el.drawImage(this.name);
-		    this.initPosition(true);
-		    this.initPosition(false);
-		    this.sockets = canvas.Sockets.new(this);
+		    this.el.drawImage(this.imageName);
+		    this.initX(this.oldEl.position.x);
+		    this.initY(this.oldEl.position.y);
+		    this.gold = this.oldEl.gold;
+		   	this.initAnimation();
+		    this.animation.play("walkInit", 'loop');
+   			scene.events(stage, scene);
+   			this.socket = canvas.Sockets.new(stage, scene, this.name);
 		}
 		else {
+      		this.oldEl.remove();
 			this.el = this.oldEl.el;
 			this.animation = this.oldEl.animation;
 		}
-	    
-	   	this.stage.refresh();
-
-		if(!this.oldEl) {
-		   	this.initAnimation();
-		    this.animation.play("walkInit", 'loop');
-		}
 		this.stage.append(this.el);
+   		this.stage.refresh();
+	},
+
+	initX: function(value) {
+		this.el.x = Math.floor(value*32);
+	},
+
+	initY: function(value) {
+		this.el.y = Math.floor(value*32);
 	},
 
 	initPosition: function(isX){
 		if(isX)
 			this.el.x = this.map.xSquareToCoord(1);
 		else
-			this.el.y = this.map.xSquareToCoord(1);
+			this.el.y = this.map.ySquareToCoord(1);
 	},
+
 	initPositionEnd: function(isX){
 		if(isX)
 			this.el.x = this.map.xSquareToCoord(28);

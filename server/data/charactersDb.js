@@ -17,39 +17,41 @@ var db = new MongoDB(dbName, new Server(dbHost, dbPort, {auto_reconnect: true}),
 		console.log('connected to database :: ' + dbName);
 	}
 });
-var characters = db.collection('game');
+var characters = db.collection('characters');
 
-exports.add = function(username)
+exports.add = function(username, callback)
 {
-	var newPlayer = {
+	var newCharacter = {
 		name: username,
 		gold: 5000,
-		position: {x:1, y:1},
-		map: '00'
+		level: 'easy',
+		position: {x:15, y:6},
+		map: '0:1'
 	};
 
-	characters.insert(user, {safe: true}, function(err, object) {
-        if (err){
-            callback(false, err);
+	characters.insert(newCharacter, {safe: true}, function(error, object) {
+        if (error){
+            callback(false, error);
         }else{
-            callback(true, user);
+            callback(true, newCharacter);
         }
     }
 	);
 }
 
-exports.findOne = function(username)
+exports.find = function(username, callback)
 {
-	characters.findOne({username:username}, function(error, obj) {
-
+	characters.findOne({name: username}, function(error, obj) {
+		console.log('RESULTAT DE LA REQUETE : ');
+		console.log(obj);
 		if(obj){
-			if(obj.username == username){
+			if(obj.name === username){
 				callback(true, obj);
 			}else{
-				callback(false, 'wrongPass');
+				callback(false, 'no same usernames');
 			}
 		}else{
-			callback(false, 'usernameNoTaken');
+			callback(false, error);
 		}
 	});
 }

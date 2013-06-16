@@ -1,11 +1,7 @@
 footer
 script(src='/socket.io/socket.io.js')
 script(type='text/javascript')
-  var socket = io.connect('/game');
-  var caracter = null;
-  socket.on('hi', function (data) {
-  console.log(data);
-  });
+  var socket = io.connect('/');
 script(type='text/javascript', src='/js/jquery.js')
 script(type='text/javascript', src='/js/bootstrap.js')
 script(type='text/javascript', src='/js/canvasengine.min.js')

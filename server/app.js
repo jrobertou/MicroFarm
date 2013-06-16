@@ -29,13 +29,11 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-
-
 var main = require('./routes/main.js'),
   log = require('./routes/log.js'),
   profil = require('./routes/profil.js'),
   game = require('./routes/game.js'),
-  socketio = require('./modules/sockets.js');
+  socketio = require('./routes/sockets.js');
 
 socketio.listen(io);
 

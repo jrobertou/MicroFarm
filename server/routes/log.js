@@ -1,6 +1,6 @@
 var accountManager = require('../modules/account.js'),
   callbackMessage = require('../helpers/callbackMessage.js'),
-  socketio = require('../modules/sockets.js');
+  gameManager = require('../modules/game.js');
 
 var validMessage = callbackMessage.validMessage,
   errorMessage = callbackMessage.errorMessage;
@@ -12,21 +12,20 @@ exports.signup = function(req, res)
 		pass = req.body.pass,
 		repass = req.body.repass;
 
-	var callback = function(valid, error){
+	var callback = function(valid, returnMessage){
       var feedback = 'Une erreur est survenue';
       if(valid){
         feedback = validMessage['addUsername'];
+        gameManager.addCharacter(returnMessage.username, function(success, back){});
       }else{
-        if(typeof(error) === "string"){
-          feedback = errorMessage[error];
+        if(typeof(returnMessage) === "string"){
+          feedback = errorMessage[returnMessage];
         }else{
-          feedback = error;
+          feedback = returnMessage;
         }
       }
       res.render('index', {feedback:feedback, log: false});
-    }; 
-  console.log("try to register a new user: ");
-  console.log("email:"+email+", username:"+username+", pass:"+pass+", repass:"+repass+"");
+    };
 	accountManager.addUser(email, username, pass, repass, callback);
 };
 
@@ -40,8 +39,7 @@ exports.login = function (req, res)
 
       var user = response;
       user.pass = pass;
-      res.cookie('user', user, { maxAge: 900000 });
-      socketio.setUser(user);
+      res.cookie('username', user.username);
       req.session.user = user;
       res.redirect("/profil");
       var feedback = null;

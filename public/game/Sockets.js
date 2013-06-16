@@ -1,20 +1,19 @@
 Class.create("Sockets", {
-
-  initialize: function(gameSocket) {
-    
-    
+	name: null,
+  initialize: function(stage, scene, name) {
+    this.name = name;
   },
 
-  render: function() {
-    
+  emitDeplacement: function(mapStringPosition, position) {
+    var that = this;
+    socket.emit('move', {name: that.name, map: mapStringPosition, position: position});
   },
 });
 
 var Sockets = {
   Sockets: {
-    "new": function(gameSocket) {
-      return Class["new"]("Sockets", [gameSocket]);
+    "new": function(stage, scene, name) {
+      return Class["new"]("Sockets", [stage, scene, name]);
     }
   }
 };
-
