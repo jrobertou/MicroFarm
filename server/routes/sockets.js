@@ -9,9 +9,10 @@ exports.listen = function(io)
 	  socket.on('iamanewboy', function (data) {
 
 	  		var callback = function(success, dataReturn) {
-	  			players[socket.id] = dataReturn;
+	  			dataReturn['scoketId'] = socket.id;
+	  			players.push(dataReturn);
 
-	  			socket.emit('welcome', {me: dataReturn, others:players});
+	  			socket.emit('welcome', {me: dataReturn, others: players});
 	  			socket.broadcast.emit('newPlayer', {user: dataReturn, players: players});
 	  		};
 	  	gameManager.findCharacter(data.username, callback);
@@ -36,11 +37,18 @@ exports.listen = function(io)
     });
 
     socket.on('disconnect', function () {
-    		var user = players[socket.id];
-    		if(user && user.name){
-		      players.splice(socket.id, 1);
-	    		socket.broadcast.emit('playerleave', {players:players, user:{name: user.name}});
+    	var tmp = [], user= null;
+    		for(var player in this.players) {
+    			if(player.socketId != socket.id) {
+    				tmp.push(player);
+    			}
+    			else {
+    				user = player;
+    			}
     		}
+    		if(user)
+	    	socket.broadcast.emit('playerleave', {players:players, user:{name: user.name}});
+    		players = tmp;
   	});
 
 	});

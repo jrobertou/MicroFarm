@@ -45,10 +45,10 @@ canvas.Scene.new({
 
   ready: function(stage) {
     var scene = this;
-    this.socketInit();
     this.stage = stage;
     this.players = canvas.Players.new(stage, scene);
     scene.otherObjects = canvas.OthersObject.new(stage, scene);
+    this.socketInit();
     
   },
   render: function(stage) {
@@ -59,7 +59,8 @@ canvas.Scene.new({
     var stage = this.stage,
         scene = this;
 
-    scene.players.playersDbArray = others;
+    console.log(others);
+    scene.players.setPlayersDbArray(others);
 
     scene.map = canvas.Map.new(stage, scene, user.map);
     scene.canvasEl.on("mapLoad", {stage:stage, scene: scene}, scene.mapLoad);
@@ -85,7 +86,7 @@ canvas.Scene.new({
     var game = this;
 
     socket.on('welcome', function (data) {
-        game.initMap(data);
+        game.initMap(data.me, data.others);
     });
 
     socket.emit('iamanewboy', {username: game.username});

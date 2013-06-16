@@ -29,6 +29,10 @@ Class.create("Players", {
     return this.players[name];
   },
 
+  setPlayersDbArray: function(array){
+    return this.playersDbArray = array;
+  },
+
   remove: function(name) {
     if(this.players[name]) {
       this.players[name].remove();
