@@ -44,9 +44,12 @@ Class.create("Caracter", {
       		this.oldEl.remove();
 			this.el = this.oldEl.el;
 			this.animation = this.oldEl.animation;
+			this.socket = this.oldEl.socket;
+			this.socket.emitChangeMap(this.map.coordonatesToString());
 		}
-		this.stage.append(this.el);
-   		this.stage.refresh();
+
+		stage.append(this.el);
+   		stage.refresh();
 	},
 
 	initX: function(value) {
@@ -86,6 +89,9 @@ Class.create("Caracter", {
 	initMove: function(squareX, squareY) {
 		var caracter = this,
 			map = caracter.scene.map;
+
+    	caracter.socket.emitDeplacement({x: squareX, y:squareY});
+
 		caracter.move = true;
 		if(caracter.animation)
 			caracter.animation.stop();
@@ -95,8 +101,6 @@ Class.create("Caracter", {
        	caracter.targetPosition = {x: squareX!=now.x?squareX:null, y: squareY!=now.y?squareY:null};
 
        	var target = caracter.targetPosition;
-
-       	console.log(caracter.targetPosition)
 
        	if(target.x != null || target.y != null){
 
@@ -133,7 +137,8 @@ Class.create("Caracter", {
 
     nextSquare: function(direction, nb){
     	var caracter = this,
-    		targetPosition;
+    		targetPosition,
+    		isMainCharacter = caracter.name === caracter.scene.mainCaracter.name;
 
 		switch(direction) {
 			case 'x': 
@@ -161,7 +166,7 @@ Class.create("Caracter", {
 					y: caracter.el.y
 		        },
 	        	caracter.speedAnimation, Ease.linear).call(function(){
-	        		caracter.callbackNexSquare(direction, nb, !caracter.scene.map.isEndMapX(caracter.el.x) );
+	        		caracter.callbackNexSquare(direction, nb, !caracter.scene.map.isEndMapX(caracter.el.x, isMainCharacter));
         	});
 		}
 		else {
@@ -170,7 +175,7 @@ Class.create("Caracter", {
 					y: targetPosition
 		        },
 	        	caracter.speedAnimation, Ease.linear).call(function(){
-	        		caracter.callbackNexSquare(direction, nb, !caracter.scene.map.isEndMapY(caracter.el.y));
+	        		caracter.callbackNexSquare(direction, nb, !caracter.scene.map.isEndMapY(caracter.el.y, isMainCharacter));
         	});
 		}
 
@@ -188,10 +193,11 @@ Class.create("Caracter", {
     			caracter.target = null;
     			caracter.nextSquare(tmpTarget.direction, tmpTarget.nb);
     		}
-			else
-    			caracter.move = false;
-
-    	this.socket.emitDeplacement(caracter.map.coordonatesToString(), caracter.getSquarePosition());
+			else if(mapIsNotEnd == 'delete') {
+					caracter.remove();
+				}
+				else
+    				caracter.move = false;
     },
 
 	initAnimation: function() {

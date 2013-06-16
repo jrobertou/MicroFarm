@@ -54,9 +54,21 @@ exports.find = function(username, callback)
 	});
 }
 
-exports.changePosition = function(name, map, position, callback)
+exports.changePosition = function(name, position, callback)
 {
-	characters.findAndModify({name: name}, [['_id','asc']], {$set: {map: map, position: position}}, {},
+	characters.findAndModify({name: name}, [['_id','asc']], {$set: {position: position}}, {},
+        function(err, object) {
+            if (err){
+                callback(false, object);
+            }else{
+                callback(true, object);
+            }
+        });
+}
+
+exports.changeMap = function(name, map, callback)
+{
+	characters.findAndModify({name: name}, [['_id','asc']], {$set: {map: map}}, {},
         function(err, object) {
             if (err){
                 callback(false, object);

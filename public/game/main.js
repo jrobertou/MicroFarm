@@ -42,9 +42,10 @@ canvas.Scene.new({
   },
 
   ready: function(stage) {
+    var scene = this;
     this.socketInit();
     this.stage = stage;
-    this.otherPlayers = canvas.OtherPlayers.new(stage, this);
+    this.otherPlayers = canvas.OtherPlayers.new(stage, scene);
     
   },
   render: function(stage) {
@@ -55,9 +56,10 @@ canvas.Scene.new({
     var stage = this.stage,
         scene = this;
 
-    scene.map = canvas.Map.new(stage, scene, param.map);
+    scene.otherPlayers.othersArray = param.others;
+    scene.map = canvas.Map.new(stage, scene, param.me.map);
     scene.canvasEl.on("mapLoad", {stage:stage, scene: scene}, scene.mapLoad);
-    scene.mainCaracter = param;
+    scene.mainCaracter = param.me;
   },
 
   mapLoad: function(e) {
@@ -69,6 +71,8 @@ canvas.Scene.new({
 
     scene.mainCaracter = canvas.Caracter.new(stage, scene, tmpCarac);
     scene.events(stage, scene);
+    scene.otherPlayers.reinitialize();
+    scene.otherPlayers.addOthers();
     
   },
 
@@ -82,11 +86,23 @@ canvas.Scene.new({
     socket.emit('iamanewboy', {username: game.username});
 
     socket.on('newOtherPlayers', function (data) {
-      game.otherPlayers.add(data.name);
+      game.otherPlayers.add(data);
+    });
+
+    socket.on('playerleave', function (data) {
+      game.otherPlayers.remove(data.name);
     });
 
     socket.on('move', function (data) {
-      game.otherPlayers.get(data.name).initMove(data.position.x, data.position.y);
+      game.otherPlayers.othersArray = data.players;
+      var user = game.otherPlayers.get(data.user.name);
+      if(user)
+        user.initMove(data.user.position.x, data.user.position.y);
+    });
+
+    socket.on('moveMap', function (data) {
+      game.otherPlayers.othersArray = data.players;
+      game.otherPlayers.remove(data.name);
     });
   },
 });

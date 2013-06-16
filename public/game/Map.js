@@ -135,22 +135,29 @@ Class.create("Map", {
 		map.isBuildBuilding = true;
 	},
 
-	isEndMapX: function(xValue) {
+	isEndMapX: function(xValue, isMainCharacter) {
 		xValue = this.xCoordToSquare(xValue);
 		if(xValue == 0 || xValue == this.lastSquareOnMap.x) {
-			return this.loadNextMap(xValue, true);
+			if(isMainCharacter) {
+				return this.loadNextMap(xValue, true);
+			}
+			else
+				return 'delete';
 		}
 		else {
 			return false;
 		}
 	},
 
-	isEndMapY: function(yValue) {
+	isEndMapY: function(yValue, isMainCharacter) {
 		yValue = this.yCoordToSquare(yValue);
 
 		if(yValue == 0 || yValue == this.lastSquareOnMap.y) {
-
-			return this.loadNextMap(yValue, false);
+			if(isMainCharacter) {
+				return this.loadNextMap(yValue, false);
+			}
+			else
+				return 'delete';
 		}
 		else {
 			return false;
