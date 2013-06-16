@@ -9,7 +9,15 @@ exports.listen = function(io)
 	  		var callback = function(success, dataReturn) {
 	  			socket.emit('welcome', dataReturn);
 	  		};
-	  	console.log('REQUETE A LA BABSE AVEC : '+data.username);
+	
+	  	gameManager.findCharacter(data.username, callback);
+    });
+
+    socket.on('move', function (data) {
+	  		var callback = function(success, dataReturn) {
+	  			socket.emit('welcome', dataReturn);
+	  		};
+	
 	  	gameManager.findCharacter(data.username, callback);
     });
 

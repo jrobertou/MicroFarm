@@ -13,7 +13,7 @@ Class.create("Caracter", {
 	speedAnimation: 3,
 	target: null,
 	move:false,
-	sockets: null,
+	socket: null,
 
 
 	initialize: function(stage, scene, oldEl) {
@@ -70,6 +70,10 @@ Class.create("Caracter", {
 		else
 			this.el.y = this.map.ySquareToCoord(11);
 	},
+
+	getSquarePosition: function() {
+		return coordonatesToSquare(thsi.el.x, this.el.y);
+	}
 
 	add: function() {
 	    this.stage.append(this.el);
@@ -175,22 +179,21 @@ Class.create("Caracter", {
     callbackNexSquare: function(direction, nb, mapIsNotEnd) {
     	var caracter = this;
     	caracter.animation.stop();
-    		--nb;
-    		if(nb > 0){
-    			caracter.nextSquare(direction, nb);
-    		}
-    		else if(caracter.target && mapIsNotEnd) {
+		--nb;
+		if(nb > 0){
+			caracter.nextSquare(direction, nb);
+		}
+		else if(caracter.target && mapIsNotEnd) {
     			var tmpTarget = caracter.target;
     			caracter.target = null;
     			caracter.nextSquare(tmpTarget.direction, tmpTarget.nb);
     		}
-    			else
-        			caracter.move = false;
+			else
+    			caracter.move = false;
+
+    	this.socket.emitDeplacement(caracter.map.coordonatesToString(), caracter.getSquarePosition());
     },
-    increaseZIndex: function(){
-    	//character.el.zIndex++;
-    	console.log('test');
-    },
+
 	initAnimation: function() {
         var animation = canvas.Animation.new({
                 images: "chara",
