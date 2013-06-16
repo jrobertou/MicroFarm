@@ -15,7 +15,7 @@ Class.create("Sockets", {
 
   emitChangeMap: function(mapStringPosition) {
     var that = this;
-    socket.emit('moveMap', {name: that.name, map: mapStringPosition});
+    socket.emit('changeMap', {name: that.name, map: mapStringPosition});
   }
 
 });

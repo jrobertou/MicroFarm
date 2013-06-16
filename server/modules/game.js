@@ -5,9 +5,9 @@ exports.addCharacter = function(username, callback)
 	characterDb.add(username, callback);
 };
 
-exports.findCharacter = function(username, callback)
+exports.findCharacter = function(username, players, callback)
 {
-	characterDb.find(username, callback);		
+	characterDb.find(username, players, callback);		
 };
 
 exports.changeCharacterPosition = function(username, position, callback)

@@ -5,7 +5,7 @@ var canvas = CE.defines('canvas_id').
     extend(Input).
     extend(Sockets).
     extend(Caracter).
-    extend(OtherPlayers).
+    extend(Players).
     extend(OthersObject).
     extend(Map).
     extend(Animation).
@@ -31,7 +31,7 @@ canvas.Scene.new({
   gameSockets: null,
   socket: null,
   username: document.cookie.split("=")[1],
-  otherPlayers: null,
+  players: null,
   otherObjects: null,
 
   events: function(stage, scene) {
@@ -47,7 +47,7 @@ canvas.Scene.new({
     var scene = this;
     this.socketInit();
     this.stage = stage;
-    this.otherPlayers = canvas.OtherPlayers.new(stage, scene);
+    this.players = canvas.Players.new(stage, scene);
     scene.otherObjects = canvas.OthersObject.new(stage, scene);
     
   },
@@ -55,14 +55,15 @@ canvas.Scene.new({
     stage.refresh();
   },
 
-  initMap: function(param) {
+  initMap: function(user, others) {
     var stage = this.stage,
         scene = this;
 
-    scene.otherPlayers.othersArray = param.others;
-    scene.map = canvas.Map.new(stage, scene, param.me.map);
+    scene.players.playersDbArray = others;
+
+    scene.map = canvas.Map.new(stage, scene, user.map);
     scene.canvasEl.on("mapLoad", {stage:stage, scene: scene}, scene.mapLoad);
-    scene.mainCaracter = param.me;
+    scene.mainCaracter = user;
     scene.events(stage, scene);
   },
 
@@ -75,8 +76,8 @@ canvas.Scene.new({
 
     scene.mainCaracter = canvas.Caracter.new(stage, scene, tmpCarac);
     scene.otherObjects.reinitialize();
-    scene.otherPlayers.reinitialize();
-    scene.otherPlayers.addOthers();
+    scene.players.reinitialize();
+    scene.players.addOthers();
     
   },
 
@@ -84,29 +85,34 @@ canvas.Scene.new({
     var game = this;
 
     socket.on('welcome', function (data) {
-      game.initMap(data);
+        game.initMap(data);
     });
 
     socket.emit('iamanewboy', {username: game.username});
 
-    socket.on('newOtherPlayers', function (data) {
-      game.otherPlayers.add(data);
+    socket.on('newPlayer', function (data) {
+      game.players.add(data.user);
+      game.players.playersDbArray = data.players;
     });
 
     socket.on('playerleave', function (data) {
-      game.otherPlayers.remove(data.name);
+      game.players.remove(data.user.name);
+      game.players.playersDbArray = data.players;
     });
 
     socket.on('move', function (data) {
-      game.otherPlayers.othersArray = data.players;
-      var user = game.otherPlayers.get(data.user.name);
-      if(user)
-        user.initMove(data.user.position.x, data.user.position.y);
+      game.players.playersDbArray = data.players;
+      var user = game.players.get(data.user.name);
+      if(user) {
+        if(user.map == game.mainCaracter.map.coordonatesToString()) {
+          user.initMove(data.user.position.x, data.user.position.y);
+        }
+      }
     });
 
-    socket.on('moveMap', function (data) {
-      game.otherPlayers.othersArray = data.players;
-      game.otherPlayers.remove(data.name);
+    socket.on('changeMap', function (data) {
+      game.players.playersDbArray = data.players;
+      game.players.remove(data.name);
     });
   },
 });
