@@ -1,16 +1,27 @@
 extends layout
 block content
 	div.row-fluid
-		div.span4.offset1
+		div.span1.offset1
+			if user
+			p Name:
+		div.span9
 			if user
 			p= user.username
-		div.span4.offset1
+	div.row-fluid
+		div.span1.offset1
+			if user
+			p Email:
+		div.span9
 			if user
 			p= user.email
-		select
-		    option(value='easy', selected=user.email == 'easy') Easy
-		    option(value='normal', selected=user.email == 'normal') Normal
-		    option(value='easy', selected=user.email == 'easy') Hard
+	div.row-fluid
+		div.span1.offset1
+			if user
+			p Level:
+		div.span9
+			if user
+			p= user.level
+
 	include footer
 			
 //script(src='/js/helpers/ajax-send-form.js')

@@ -39,6 +39,7 @@ exports.login = function (req, res)
 
       var user = response;
       user.pass = pass;
+      user.level = 'easy';
       res.cookie('username', user.username);
       req.session.user = user;
       res.redirect("/profil");
