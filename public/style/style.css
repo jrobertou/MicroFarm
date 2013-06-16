@@ -48,7 +48,7 @@ div#PanelButton2
 	height: 32px;
 	width: 30px;
 	display: inline-block;
-	margin: 0px 0px 0px 2px;
+	margin: 0px 0px 0px 5px;
 }
 div#PanelOr
 {
@@ -107,4 +107,17 @@ div#PanelBle:hover
 	width:  28px;
 	display: inline-block;
 	background: url('/img/barsheet.png') no-repeat -344px -30px;	
+}
+div#PanelBuilding
+{
+	height: 32px;
+	width:  28px;
+	display: inline-block;
+	background: url('/img/barsheet.png') no-repeat -204px -30px;
+}div#PanelBuilding:hover
+{
+	height: 32px;
+	width:  28px;
+	display: inline-block;
+	background: url('/img/barsheet.png') no-repeat -230px -30px;	
 }

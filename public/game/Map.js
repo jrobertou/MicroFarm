@@ -9,13 +9,16 @@ Class.create("Map", {
 	hoverSquare: null,
 	clickSquare: null,
 	isBuildWheat: false,
+	isBuildBuilding: false,
 	squareWidth: 32,
 	squareHeight: 32,
 	currentMap: {x:0, y:0},
 	lastSquareOnMap: null,
+	plants: null,
 	maps: [
-		['/maps/Map01.json', '/maps/Map02.json'],
-		['/maps/Map03.json', '/maps/Map04.json']
+		['/maps/Map01.json', '/maps/Map02.json','/maps/Map03.json'],
+		['/maps/Map04.json', '/maps/Map05.json','/maps/Map06.json'],
+		['/maps/Map07.json', '/maps/Map08.json','/maps/Map09.json']
 	],
 
 	initialize: function(stage, scene) {
@@ -98,6 +101,12 @@ Class.create("Map", {
 			$("#canvas_id").trigger("buildWheatClick",[map.stage, map.scene, {x:coord.x, y:coord.y}]);
 		}
 		else
+			if(map.isBuildBuilding)
+			{
+				map.isBuildBuilding = false;
+				$("#canvas_id").trigger("BuildBuildingClick",[map.stage, map.scene, {x:coord.x, y:coord.y}]);
+			}
+		else
 			if(!map.scene.mainCaracter.move && map.squareCollection[coord.x+'-'+coord.y].canWalkOnIt){
 				if(map.clickSquare)
 				map.clickSquare.remove();
@@ -111,6 +120,10 @@ Class.create("Map", {
 	buildWheat:function(e){
 		var map = e.data.map;
 		map.isBuildWheat = true;
+	},
+	buildBuilding:function(e){
+		var map = e.data.map;
+		map.isBuildBuilding = true;
 	},
 
 	isEndMapX: function(xValue) {

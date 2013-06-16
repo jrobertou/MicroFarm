@@ -104,7 +104,7 @@ Class.create("Tiled", {
 							this.squareCollection[j+'-'+k] = {
 								id: this.squareCollection.length,
 								origin: {x: j, y: k},
-								canWalkOnIt: true
+								canWalkOnIt: y<=128?true:false
 							};
 							
 							_tile.drawImage(tileset.name, x, y, this.tile_w, this.tile_h, j * this.tile_w, k * this.tile_h, this.tile_w, this.tile_h);

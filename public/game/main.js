@@ -8,6 +8,7 @@ var canvas = CE.defines('canvas_id').
     extend(Map).
     extend(Animation).
     extend(Plantation).
+    extend(Building).
     ready(function() {
       canvas.Scene.call('MyScene');
     });
@@ -16,8 +17,8 @@ canvas.Scene.new({
   name: 'MyScene',
   materials: {
     images: {
-      CastleTown: '/img/CastleTown.png',
-      FarmVillage: '/img/FarmVillage.png',
+      Sprite: '/img/Sprite.png',
+      Building: '/img/building.png',
       ball: '/img/ball.png',
       chara: '/img/chara.png',
     }
@@ -30,9 +31,9 @@ canvas.Scene.new({
     scene.canvasEl.on('click', {map: scene.map}, scene.map.clickOnMap);
     scene.canvasEl.mousemove({map:scene.map}, scene.map.mouseMoveOnMap); 
     $("#PanelBle").on("click", {map: scene.map}, scene.map.buildWheat);
+    $("#PanelBuilding").on("click", {map: scene.map}, scene.map.buildBuilding);
     scene.canvasEl.on("buildWheatClick", canvas.Plantation.new);
-    
-    
+    scene.canvasEl.on("BuildBuildingClick", canvas.Building.new);
   },
 
   ready: function(stage) {

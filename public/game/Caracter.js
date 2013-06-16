@@ -36,8 +36,6 @@ Class.create("Caracter", {
 			this.el = this.oldEl.el;
 			this.animation = this.oldEl.animation;
 		}
-		
-
 	    
 	   	this.stage.refresh();
 
@@ -177,7 +175,10 @@ Class.create("Caracter", {
     			else
         			caracter.move = false;
     },
-
+    increaseZIndex: function(){
+    	//character.el.zIndex++;
+    	console.log('test');
+    },
 	initAnimation: function() {
         var animation = canvas.Animation.new({
                 images: "chara",

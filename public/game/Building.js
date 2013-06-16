@@ -1,8 +1,8 @@
-Class.create("Plantation", {
+Class.create("Building", {
 	el: null,
-	name: "Sprite",
-	width: 32,
-	height: 48,
+	name: "Building",
+	width: 160,
+	height: 256,
 	stage: null,
 	scene: null,
 	map: null,
@@ -29,13 +29,13 @@ Class.create("Plantation", {
 	   	this.stage.refresh();
 	   	this.initAnimation();
 	   	this.stage.append(this.el);
-	   	this.scene.mainCaracter.el.zIndex(this.el.zIndex()+1);
+ 	   	this.scene.mainCaracter.el.zIndex(this.el.zIndex()+1);
 	},
 	initPosition: function(isX){
 		if(isX)
-			this.el.x = this.map.xSquareToCoord(this.position.x);
+			this.el.x = this.map.xSquareToCoord(this.position.x)-64;
 		else
-			this.el.y = this.map.xSquareToCoord(this.position.y);
+			this.el.y = this.map.xSquareToCoord(this.position.y)-96;
 	},
 	add: function() {
 	    this.stage.append(this.el);
@@ -46,13 +46,13 @@ Class.create("Plantation", {
 
 	initAnimation: function() {
         var animation = canvas.Animation.new({
-                images: "Sprite",
+                images: "Building",
                 animations: {
-                    WheatStart: {
-                        frames: [243,244],
+                    BuildingInit: {
+                        frames: [0, 0],
                         size: {
-                            width: 32,
-                            height: 32
+                            width: 160,
+                            height: 245
                         },
                         frequence: 0
                     }
@@ -61,13 +61,13 @@ Class.create("Plantation", {
 
         animation.add(this.el);
         this.animation = animation;
-		this.animation.play("WheatStart", 'stop');
+		this.animation.play("BuildingInit", 'stop');
     }
 });
-	var Plantation = {
-	Plantation: {
+	var Building = {
+	Building: {
 		"new": function(e, stage, scene, position) {
-			return Class["new"]("Plantation", [stage, scene, position]);
+			return Class["new"]("Building", [stage, scene, position]);
 		}
 	}
 };
