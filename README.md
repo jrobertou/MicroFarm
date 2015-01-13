@@ -1,5 +1,7 @@
 #[Micro-Farm]
 
+Real time game NodeJS and HTML5 based
+
 ####The begining of a basic Micro Farm system with the following features :
 
 * Login Feature (Signup)
